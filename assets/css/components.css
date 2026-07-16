@@ -111,7 +111,94 @@
   font-size: 13px;
 }
 
-/* ================= Tariff cards — styled like reference's .card/.title/.price-row ================= */
+/* ================= Tariff tiles (level 1) — copied from reference's .tiles/.tile ================= */
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  max-width: 770px;
+  margin: 6px auto 0;
+}
+.tile {
+  flex: 0 1 340px;
+  aspect-ratio: 1/1;
+  border-radius: 26px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--c1, var(--dark));
+  box-shadow: 0 14px 32px rgba(40,30,20,0.20);
+  transition: transform 0.2s, box-shadow 0.2s;
+  padding: 20px;
+}
+.tile:hover { transform: translateY(-6px); box-shadow: 0 22px 46px rgba(40,30,20,0.30); }
+.tile .tname {
+  font-family: var(--fd);
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: 1px;
+  color: var(--ontitle, #fff);
+  line-height: 1;
+  text-align: center;
+}
+.tile .tsub {
+  font-family: var(--fd);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ontitle, #fff);
+  opacity: 0.9;
+}
+.tile .tgo {
+  margin-top: 6px;
+  font-family: var(--fb);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--onc2, #fff);
+  background: var(--c2, var(--amber));
+  padding: 7px 16px;
+  border-radius: 999px;
+  box-shadow: 0 2px 0 var(--c2d, #8A6420);
+}
+
+/* ================= Tariff detail view (level 2) — copied from reference's .topbar/.back/.crumb ================= */
+.topbar {
+  max-width: 1180px;
+  margin: 0 auto 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.back {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 9px 15px;
+  cursor: pointer;
+  font-family: var(--fb);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: background 0.15s;
+}
+.back:hover { background: var(--gold-pale); }
+.crumb {
+  font-family: var(--fb);
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+.crumb b { color: var(--dark); }
+
+/* ================= Tariff cards (inside detail view) — styled like reference's .card/.title/.price-row ================= */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

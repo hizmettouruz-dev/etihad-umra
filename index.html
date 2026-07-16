@@ -33,11 +33,19 @@
 
 <section class="section" id="tariffs">
   <div class="container">
-    <div class="section-head">
+    <div class="section-head" id="tariffsHead">
       <div class="section-label" data-i18n="tariffs_label">Пакеты туров</div>
       <h2 class="section-title" data-i18n="tariffs_title">Выберите свой тариф</h2>
     </div>
-    <div class="cards-grid" id="tariffs-grid"></div>
+    <div class="tiles" id="tariffs-grid"></div>
+
+    <div class="tariff-detail" id="tariffDetail" hidden>
+      <div class="topbar">
+        <button type="button" class="back" id="tariffBackBtn">← <span data-i18n="btn_back">Назад</span></button>
+        <div class="crumb" id="tariffCrumb"></div>
+      </div>
+      <div class="cards-grid" id="tariffDetailCards"></div>
+    </div>
   </div>
 </section>
 

@@ -94,79 +94,101 @@ function hotelsHtml(hotels) {
   `).join('');
 }
 
+function activeTariffs() {
+  return siteData.tariffs
+    .filter((tf) => tf.is_active !== 'FALSE')
+    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+}
+
 export function renderTariffs() {
   const grid = document.getElementById('tariffs-grid');
   if (!grid || !siteData) return;
 
-  const active = siteData.tariffs
-    .filter((tf) => tf.is_active !== 'FALSE')
-    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
-
-  grid.innerHTML = active.map((tf) => {
+  grid.innerHTML = activeTariffs().map((tf) => {
     const isPlaceholder = tf.is_placeholder === 'TRUE';
     const name = field(tf, 'name');
-    const desc = field(tf, 'short_desc');
-    const duration = field(tf, 'duration_days');
-    const departure = field(tf, 'departure_day');
     const theme = tf.theme || 't-gold';
-
-    if (isPlaceholder) {
-      return `
-        <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
-          <div class="pkg-title-banner">${name}</div>
-          <div class="pkg-placeholder-badge">${t('coming_soon')}</div>
-        </div>
-      `;
-    }
-
-    const hotels = siteData.tariffHotels.filter((r) => r.tariff_id === tf.id);
-    const media = siteData.media
-      .filter((r) => r.tariff_id === tf.id)
-      .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
-    const inclusions = field(tf, 'inclusions').split('|').map((s) => s.trim()).filter(Boolean);
-
     return `
-      <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
-        <div class="pkg-title-banner">${name}</div>
-        <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
-        ${desc ? `<div class="pkg-desc">${desc}</div>` : ''}
-        ${galleryHtml(media)}
-        ${tf.flight_route ? `<div class="tm-info-row route"><b>${tf.flight_route}</b></div>` : ''}
-        ${field(tf, 'flight_details') ? `<div class="tm-info-row">${field(tf, 'flight_details')}</div>` : ''}
-        ${hotelsHtml(hotels)}
-        ${field(tf, 'meal_plan') ? `<div class="tm-info-row">${field(tf, 'meal_plan')}</div>` : ''}
-        ${pricesHtml(tf)}
-        ${inclusions.length ? `<ul class="tm-checklist">${inclusions.map((i) => `<li>${i}</li>`).join('')}</ul>` : ''}
-        <div class="pkg-cta" data-role="request" data-tariff-id="${tf.id}">${t('btn_request')}</div>
+      <div class="tile ${theme}" data-tariff-id="${tf.id}" ${isPlaceholder ? '' : 'role="button" tabindex="0"'}>
+        <div class="tname">${name}</div>
+        <div class="tsub">${t('pkg_label')}</div>
+        <div class="tgo">${isPlaceholder ? t('coming_soon') : t('btn_view') + ' →'}</div>
       </div>
     `;
   }).join('');
 
-  grid.querySelectorAll('.pkg-card').forEach((card) => {
-    const id = card.dataset.tariffId;
-    const media = siteData.media
-      .filter((r) => r.tariff_id === id)
-      .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
-
-    card.querySelectorAll('.tm-gallery-item').forEach((node) => {
-      node.addEventListener('click', () => {
-        const items = media.map((m) => ({
-          type: m.type,
-          filename: m.gh_asset_filename,
-          label: m[`label_${getLang()}`] || m.label_ru || '',
-        }));
-        openMediaModal(items, Number(node.dataset.mediaIdx));
-      });
-    });
-
-    const requestBtn = card.querySelector('[data-role="request"]');
-    if (requestBtn) {
-      requestBtn.addEventListener('click', () => {
-        const tf = siteData.tariffs.find((r) => r.id === id);
-        openLeadForm(field(tf, 'name'));
-      });
-    }
+  grid.querySelectorAll('.tile').forEach((tile) => {
+    const tf = siteData.tariffs.find((r) => r.id === tile.dataset.tariffId);
+    if (tf && tf.is_placeholder === 'TRUE') return;
+    tile.addEventListener('click', () => openTariffDetail(tile.dataset.tariffId));
   });
+}
+
+function renderTariffDetail(tariffId) {
+  const cardsEl = document.getElementById('tariffDetailCards');
+  const tf = siteData.tariffs.find((r) => r.id === tariffId);
+  if (!cardsEl || !tf) return;
+
+  const name = field(tf, 'name');
+  const duration = field(tf, 'duration_days');
+  const departure = field(tf, 'departure_day');
+  const theme = tf.theme || 't-gold';
+  const hotels = siteData.tariffHotels.filter((r) => r.tariff_id === tf.id);
+  const media = siteData.media
+    .filter((r) => r.tariff_id === tf.id)
+    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+  const desc = field(tf, 'short_desc');
+  const inclusions = field(tf, 'inclusions').split('|').map((s) => s.trim()).filter(Boolean);
+
+  cardsEl.innerHTML = `
+    <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
+      <div class="pkg-title-banner">${name}</div>
+      <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
+      ${desc ? `<div class="pkg-desc">${desc}</div>` : ''}
+      ${galleryHtml(media)}
+      ${tf.flight_route ? `<div class="tm-info-row route"><b>${tf.flight_route}</b></div>` : ''}
+      ${field(tf, 'flight_details') ? `<div class="tm-info-row">${field(tf, 'flight_details')}</div>` : ''}
+      ${hotelsHtml(hotels)}
+      ${field(tf, 'meal_plan') ? `<div class="tm-info-row">${field(tf, 'meal_plan')}</div>` : ''}
+      ${pricesHtml(tf)}
+      ${inclusions.length ? `<ul class="tm-checklist">${inclusions.map((i) => `<li>${i}</li>`).join('')}</ul>` : ''}
+      <div class="pkg-cta" data-role="request" data-tariff-id="${tf.id}">${t('btn_request')}</div>
+    </div>
+  `;
+
+  cardsEl.querySelectorAll('.tm-gallery-item').forEach((node) => {
+    node.addEventListener('click', () => {
+      const items = media.map((m) => ({
+        type: m.type,
+        filename: m.gh_asset_filename,
+        label: m[`label_${getLang()}`] || m.label_ru || '',
+      }));
+      openMediaModal(items, Number(node.dataset.mediaIdx));
+    });
+  });
+
+  const requestBtn = cardsEl.querySelector('[data-role="request"]');
+  if (requestBtn) {
+    requestBtn.addEventListener('click', () => openLeadForm(name));
+  }
+}
+
+export function openTariffDetail(tariffId) {
+  const tf = siteData.tariffs.find((r) => r.id === tariffId);
+  if (!tf) return;
+
+  document.getElementById('tariffCrumb').innerHTML = `<b>${field(tf, 'name')}</b>`;
+  document.getElementById('tariffsHead').hidden = true;
+  document.getElementById('tariffs-grid').hidden = true;
+  document.getElementById('tariffDetail').hidden = false;
+  renderTariffDetail(tariffId);
+  document.getElementById('tariffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+export function closeTariffDetail() {
+  document.getElementById('tariffsHead').hidden = false;
+  document.getElementById('tariffs-grid').hidden = false;
+  document.getElementById('tariffDetail').hidden = true;
 }
 
 export function renderFaq() {

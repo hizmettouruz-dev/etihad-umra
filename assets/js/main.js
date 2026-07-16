@@ -1,6 +1,6 @@
 import { initI18n, applyStaticStrings } from './i18n.js';
 import { fetchSiteData } from './sheetsClient.js';
-import { setSiteData, renderAll, renderSkeletons, renderError } from './render.js';
+import { setSiteData, renderAll, renderSkeletons, renderError, closeTariffDetail } from './render.js';
 import { initMediaModal } from './mediaModal.js';
 import { initLeadForm } from './leadForm.js';
 
@@ -33,6 +33,8 @@ function bootstrap() {
   initThemeToggle();
   initMediaModal();
   initLeadForm();
+
+  document.getElementById('tariffBackBtn').addEventListener('click', closeTariffDetail);
 
   document.addEventListener('langchange', () => {
     // Data already fetched — re-render from memory, no new network request.
