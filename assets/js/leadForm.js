@@ -1,5 +1,12 @@
-import { t, getLang } from './i18n.js';
-import { LEAD_WORKER_URL } from './config.js';
+import { t } from './i18n.js';
+import { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } from './config.js';
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 
 function el(id) { return document.getElementById(id); }
 
@@ -38,22 +45,28 @@ async function submitLead(e) {
   el('leadStatus').textContent = '';
   el('leadStatus').className = 'lead-status';
 
-  const payload = {
-    firstName: el('leadFirstName').value.trim(),
-    lastName: el('leadLastName').value.trim(),
-    phone: el('leadPhone').value.trim(),
-    travelDates: el('leadDates').value.trim(),
-    packageName: el('leadPackageName').value,
-    lang: getLang(),
-  };
+  const firstName = el('leadFirstName').value.trim();
+  const lastName = el('leadLastName').value.trim();
+  const phone = el('leadPhone').value.trim();
+  const travelDates = el('leadDates').value.trim();
+  const packageName = el('leadPackageName').value;
+
+  const text = [
+    '🕋 <b>Новая заявка — EtiHAD</b>',
+    `Имя: ${escapeHtml(firstName)}`,
+    `Фамилия: ${escapeHtml(lastName)}`,
+    `Телефон: ${escapeHtml(phone)}`,
+    travelDates ? `Даты: ${escapeHtml(travelDates)}` : null,
+    packageName ? `Пакет: ${escapeHtml(packageName)}` : null,
+  ].filter(Boolean).join('\n');
 
   try {
-    const res = await fetch(LEAD_WORKER_URL, {
+    const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: 'HTML' }),
     });
-    if (!res.ok) throw new Error(`Worker ${res.status}`);
+    if (!res.ok) throw new Error(`Telegram ${res.status}`);
     el('leadStatus').textContent = t('form_ok');
     el('leadStatus').className = 'lead-status ok';
     setTimeout(closeLeadForm, 1800);

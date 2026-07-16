@@ -28,12 +28,10 @@ https://docs.google.com/spreadsheets/d/1A22dRlytShWd24nxfnkGFbDmxjh_8bWZWVPfBy7b
 
 ## Секреты — где хранятся
 
-Ничего из перечисленного не должно попадать в git-репозиторий:
-
-- **Telegram bot token** и **chat_id получателя заявок** — секреты Cloudflare Worker'а (`wrangler secret put BOT_TOKEN`, `wrangler secret put TARGET_CHAT_ID`), см. `cloudflare-worker/README` ниже.
 - **GitHub personal access token** — используется только локально при деплое, не хранится в репозитории.
+- **Telegram bot token + chat_id** — сознательно лежат открыто в `assets/js/config.js` (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`). Решение клиента: без сервера/прокси форма заявки стучится в Telegram Bot API прямо из браузера, а значит токен виден в исходном коде страницы любому желающему. Риск ограничен — этот бот умеет только отправлять сообщения в один фиксированный чат, ничего разрушительного через него не сделать. Если токен когда-нибудь начнут использовать не по назначению (спам в чат заявок) — перевыпустить его через @BotFather → `/token` и обновить `config.js`.
 
-Google Sheets API-ключ в `assets/js/config.js` — это единственный секрет, который *специально* лежит в открытом клиентском коде: он read-only и ограничен (Application restrictions → HTTP referrers → домен сайта; API restrictions → только Sheets API), поэтому такой ключ безопасен для публикации, если ограничения не снимать.
+Google Sheets API-ключ в `assets/js/config.js` — тоже открытый по дизайну секрет: он read-only и ограничен (Application restrictions → HTTP referrers → домен сайта; API restrictions → только Sheets API), поэтому безопасен для публикации, если ограничения не снимать.
 
 ## Деплой на GitHub Pages
 
@@ -42,21 +40,7 @@ Google Sheets API-ключ в `assets/js/config.js` — это единстве�
 3. Settings → Pages → Source: Deploy from a branch → `main` / `/ (root)`.
 4. Сайт появится на `https://<username>.github.io/<repo>/`.
 5. Обновить в Google Cloud Console (Credentials → API key → Application restrictions) реальный адрес, если он отличается от заложенного в план.
-6. Обновить `assets/js/config.js` — `GH_VIDEO_BASE` / `GH_PHOTO_BASE` / `GH_HERO_BASE` на реальный `owner/repo`, и `LEAD_WORKER_URL` на реальный адрес задеплоенного Worker'а.
-
-## Cloudflare Worker
-
-См. `cloudflare-worker/` — прокси, который принимает заявку с сайта и пересылает в Telegram, чтобы токен бота не был виден в коде сайта.
-
-```
-cd cloudflare-worker
-wrangler login
-wrangler secret put BOT_TOKEN
-wrangler secret put TARGET_CHAT_ID
-wrangler deploy
-```
-
-После деплоя скопировать реальный URL Worker'а (вида `https://etihad-lead-proxy.<subdomain>.workers.dev/lead`) в `assets/js/config.js` → `LEAD_WORKER_URL`.
+6. Обновить `assets/js/config.js` — `GH_VIDEO_BASE` / `GH_PHOTO_BASE` / `GH_HERO_BASE` на реальный `owner/repo`, если он изменится.
 
 ## Локальная разработка
 

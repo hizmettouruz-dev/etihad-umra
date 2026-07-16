@@ -11,8 +11,13 @@ export const GH_VIDEO_BASE = 'https://github.com/hizmettouruz-dev/etihad-umra/re
 export const GH_PHOTO_BASE = 'https://github.com/hizmettouruz-dev/etihad-umra/releases/download/media-photo/';
 export const GH_HERO_BASE = 'https://github.com/hizmettouruz-dev/etihad-umra/releases/download/media-hero/';
 
-// TODO: update once the Cloudflare Worker is deployed (see cloudflare-worker/README).
-export const LEAD_WORKER_URL = 'https://etihad-lead-proxy.YOUR-SUBDOMAIN.workers.dev/lead';
+// Lead form posts directly to Telegram's Bot API from the browser — no
+// server/proxy. Trade-off (deliberate, client's call): this token is visible
+// to anyone who views the page source. Blast radius is small — this bot only
+// sends messages into one fixed chat — but if it's ever abused, revoke/replace
+// it via @BotFather (/token) and update these two constants.
+export const TELEGRAM_BOT_TOKEN = '8916790909:AAFIgc6Ng_8T-oNB11ZOg0fm5G-4iZNEIt0';
+export const TELEGRAM_CHAT_ID = '1739109071';
 
 // Ranges include row 1 (headers) — sheetsClient.js maps columns by header
 // name, so the client is table-order independent as long as header text matches.
