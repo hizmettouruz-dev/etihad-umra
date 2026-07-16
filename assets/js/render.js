@@ -1,5 +1,7 @@
 import { t, getLang } from './i18n.js';
-import { openTariffModal } from './tariffModal.js';
+import { openMediaModal } from './mediaModal.js';
+import { openLeadForm } from './leadForm.js';
+import { GH_PHOTO_BASE } from './config.js';
 
 // In-memory only — never persisted, so a language switch or re-render never
 // shows stale data; it just re-projects the same freshly-fetched objects.
@@ -55,17 +57,41 @@ export function renderError(retryFn) {
   });
 }
 
-function tariffThumb(tariffId) {
-  const m = siteData.media.find((r) => r.tariff_id === tariffId);
-  if (!m) return '';
-  if (m.type === 'image') return `https://raw.githack.com/`; // placeholder, real URL built in mediaModal
-  return '';
-}
-
 export function renderAll() {
   renderTariffs();
   renderFaq();
   renderContacts();
+}
+
+const PRICE_TIERS = [['price_single', 1], ['price_double', 2], ['price_triple', 3], ['price_quad', 4]];
+
+function galleryHtml(media) {
+  if (!media.length) return '';
+  return `<div class="tm-gallery">${media.slice(0, 6).map((m, i) => `
+    <div class="tm-gallery-item" data-media-idx="${i}">
+      ${m.type === 'image'
+        ? `<img loading="lazy" alt="${m[`label_${getLang()}`] || ''}" src="${GH_PHOTO_BASE}${m.gh_asset_filename}">`
+        : `<div class="play-badge">▶</div>`}
+    </div>
+  `).join('')}</div>`;
+}
+
+function pricesHtml(tf) {
+  const tiers = PRICE_TIERS.filter(([key]) => tf[key]);
+  if (!tiers.length) return '';
+  return `<div class="tm-prices">${tiers.map(([key, n]) => `
+    <div class="tm-price-row"><span>${n} ${t('per_person')}</span><b>$${tf[key]}</b></div>
+  `).join('')}</div>`;
+}
+
+function hotelsHtml(hotels) {
+  if (!hotels.length) return '';
+  return hotels.map((h) => `
+    <div class="tm-hotel-row">
+      <div class="hotel-name">${h.hotel_name} <span class="hotel-meta">· ${h.city}</span></div>
+      <div class="hotel-meta">${h.nights ? h.nights + ' · ' : ''}${field(h, 'meal_plan')}</div>
+    </div>
+  `).join('');
 }
 
 export function renderTariffs() {
@@ -82,28 +108,64 @@ export function renderTariffs() {
     const desc = field(tf, 'short_desc');
     const duration = field(tf, 'duration_days');
     const departure = field(tf, 'departure_day');
-    const price = tf.price_quad || tf.price_triple || tf.price_double || tf.price_single || '';
     const theme = tf.theme || 't-gold';
+
+    if (isPlaceholder) {
+      return `
+        <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
+          <div class="pkg-title-banner">${name}</div>
+          <div class="pkg-placeholder-badge">${t('coming_soon')}</div>
+        </div>
+      `;
+    }
+
+    const hotels = siteData.tariffHotels.filter((r) => r.tariff_id === tf.id);
+    const media = siteData.media
+      .filter((r) => r.tariff_id === tf.id)
+      .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+    const inclusions = field(tf, 'inclusions').split('|').map((s) => s.trim()).filter(Boolean);
+
     return `
-      <div class="pkg-card ${theme}" data-tariff-id="${tf.id}" role="button" tabindex="0">
+      <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
         <div class="pkg-title-banner">${name}</div>
-        ${isPlaceholder ? `<div class="pkg-placeholder-badge">${t('coming_soon')}</div>` : `<div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>`}
-        <div class="pkg-duration">${tf.flight_route || ''}</div>
-        ${price ? `<div class="pkg-price"><span>${t('price_from')} / ${t('per_person')}</span><b>$${price}</b></div>` : ''}
-        <div class="pkg-desc">${desc}</div>
-        <div class="pkg-cta" data-role="request" data-tariff-id="${tf.id}">${isPlaceholder ? t('coming_soon') : t('btn_request')}</div>
+        <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
+        ${desc ? `<div class="pkg-desc">${desc}</div>` : ''}
+        ${galleryHtml(media)}
+        ${tf.flight_route ? `<div class="tm-info-row route"><b>${tf.flight_route}</b></div>` : ''}
+        ${field(tf, 'flight_details') ? `<div class="tm-info-row">${field(tf, 'flight_details')}</div>` : ''}
+        ${hotelsHtml(hotels)}
+        ${field(tf, 'meal_plan') ? `<div class="tm-info-row">${field(tf, 'meal_plan')}</div>` : ''}
+        ${pricesHtml(tf)}
+        ${inclusions.length ? `<ul class="tm-checklist">${inclusions.map((i) => `<li>${i}</li>`).join('')}</ul>` : ''}
+        <div class="pkg-cta" data-role="request" data-tariff-id="${tf.id}">${t('btn_request')}</div>
       </div>
     `;
   }).join('');
 
   grid.querySelectorAll('.pkg-card').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      const requestBtn = e.target.closest('[data-role="request"]');
-      const id = card.dataset.tariffId;
-      const tf = siteData.tariffs.find((r) => r.id === id);
-      if (tf && tf.is_placeholder === 'TRUE' && requestBtn) return;
-      openTariffModal(id, requestBtn ? true : false);
+    const id = card.dataset.tariffId;
+    const media = siteData.media
+      .filter((r) => r.tariff_id === id)
+      .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+
+    card.querySelectorAll('.tm-gallery-item').forEach((node) => {
+      node.addEventListener('click', () => {
+        const items = media.map((m) => ({
+          type: m.type,
+          filename: m.gh_asset_filename,
+          label: m[`label_${getLang()}`] || m.label_ru || '',
+        }));
+        openMediaModal(items, Number(node.dataset.mediaIdx));
+      });
     });
+
+    const requestBtn = card.querySelector('[data-role="request"]');
+    if (requestBtn) {
+      requestBtn.addEventListener('click', () => {
+        const tf = siteData.tariffs.find((r) => r.id === id);
+        openLeadForm(field(tf, 'name'));
+      });
+    }
   });
 }
 

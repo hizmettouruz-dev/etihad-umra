@@ -1,54 +1,36 @@
-/* ================= Header ================= */
-.site-header {
-  position: sticky;
-  top: 0;
+/* ================= Wrap (page container, like reference's .wrap) ================= */
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 34px 22px 40px;
+}
+
+/* ================= Corner controls (lang + theme, floating — copied position style, not a header bar) ================= */
+.corner-controls {
+  position: fixed;
+  top: 14px;
+  right: 14px;
   z-index: 40;
-  background: var(--dark);
-  padding: 14px 0;
-}
-.site-header .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  gap: 8px;
 }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--fd);
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  font-size: 18px;
-  color: #F3ECE0;
-}
-.brand img { width: 32px; height: 32px; border-radius: 6px; }
-.header-nav {
-  display: flex;
-  gap: 20px;
-  font-family: var(--fb);
-  font-weight: 600;
-  font-size: 13px;
-  color: rgba(243,236,224,0.75);
-}
-.header-nav a:hover { color: var(--accent-orange); }
-.header-actions { display: flex; align-items: center; gap: 10px; }
 
 .lang-switch {
   display: flex;
-  background: rgba(255,255,255,0.08);
+  background: rgba(43,38,34,0.06);
   border-radius: 999px;
   padding: 3px;
   gap: 2px;
 }
+[data-theme="dark"] .lang-switch { background: rgba(255,255,255,0.08); }
 .lang-switch button {
   padding: 5px 10px;
   border-radius: 999px;
   font-family: var(--fd);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  color: rgba(243,236,224,0.6);
+  color: var(--text-muted);
 }
 .lang-switch button[aria-pressed="true"] {
   background: var(--accent-orange);
@@ -56,69 +38,40 @@
 }
 
 .theme-toggle {
-  width: 34px; height: 34px;
+  width: 30px; height: 30px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.08);
-  color: var(--gold-light);
+  background: rgba(43,38,34,0.06);
+  color: var(--gold);
   display: flex; align-items: center; justify-content: center;
 }
+[data-theme="dark"] .theme-toggle { background: rgba(255,255,255,0.08); }
 
-/* ================= Hero (brand block, like reference's .brand) ================= */
-.hero {
-  background: transparent;
-  padding: 40px 24px 30px;
+/* ================= Brand block — copied from reference's .brand ================= */
+.brand {
   text-align: center;
+  margin-bottom: 26px;
 }
-.hero-inner { position: relative; }
-.hero-label {
-  font-family: var(--fd);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--accent-orange);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-.hero h1 {
+.brand h1 {
   font-family: var(--fd);
   font-weight: 800;
-  font-size: clamp(24px, 4vw, 32px);
-  letter-spacing: 0.5px;
-  color: var(--text);
+  font-size: 30px;
+  letter-spacing: 0.4px;
+  color: var(--dark);
   text-transform: uppercase;
-  line-height: 1.2;
 }
-.hero h1 span { color: var(--accent-orange); }
-.hero-sub {
-  font-family: var(--fb);
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text-muted);
-  max-width: 560px;
-  margin: 10px auto 0;
-}
-.hero-line {
+.brand .u {
   width: 74px; height: 4px;
   background: var(--accent-orange);
   border-radius: 3px;
-  margin: 12px auto;
+  margin: 9px auto 7px;
 }
-.hero-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 12px 26px;
-  border-radius: 999px;
-  background: var(--dark);
-  color: #F3ECE0;
-  font-family: var(--fd);
-  font-weight: 700;
-  font-size: 13px;
+.brand p {
+  font-family: var(--fb);
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 14px;
   letter-spacing: 0.3px;
-  box-shadow: 0 3px 0 #0c0a08;
 }
-.hero-cta:hover { transform: translateY(-2px); }
 
 /* ================= Skeletons ================= */
 .skeleton {
@@ -170,14 +123,11 @@
   border-radius: var(--radius-lg);
   padding: 14px;
   box-shadow: var(--shadow-card);
-  cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
   gap: 9px;
 }
-.pkg-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(40,30,20,0.16); }
-
 .pkg-title-banner {
   background: var(--c1, var(--dark));
   color: var(--ontitle, #fff);
@@ -216,37 +166,6 @@
   border-radius: 999px;
   text-transform: uppercase;
 }
-.pkg-name { display: none; } /* name now lives in .pkg-title-banner */
-.pkg-duration {
-  text-align: center;
-  font-family: var(--fb);
-  font-weight: 700;
-  font-size: 11.5px;
-  color: var(--ttxt2, var(--text-muted));
-}
-.pkg-price {
-  background: var(--panel, var(--chip-bg));
-  border: 1px solid var(--line, var(--border));
-  border-radius: 11px;
-  padding: 8px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--fb);
-  font-weight: 700;
-  font-size: 13px;
-  color: var(--ttxt, var(--text));
-}
-.pkg-price b {
-  font-family: var(--fd);
-  font-weight: 800;
-  font-size: 16px;
-  background: var(--c2, var(--amber));
-  color: var(--onc2, #fff);
-  border-radius: 9px;
-  padding: 5px 12px;
-  box-shadow: 0 2px 0 var(--c2d, #8A6420);
-}
 .pkg-desc {
   font-family: var(--fb);
   font-size: 12.5px;
@@ -270,7 +189,7 @@
 }
 .pkg-cta:hover { transform: translateY(-2px); }
 
-/* ================= Tariff detail modal ================= */
+/* ================= Modals (generic backdrop + box, used by lead form / media) ================= */
 .modal-backdrop {
   position: fixed; inset: 0;
   background: rgba(20, 16, 10, 0.55);
@@ -282,84 +201,59 @@
 }
 .modal-backdrop.open { display: flex; }
 
-.tariff-modal {
+.modal-box {
   width: 100%;
-  max-width: 1080px;
+  max-width: 480px;
   max-height: 92vh;
-  background: var(--tbg, var(--card-bg));
-  color: var(--ttxt, var(--text));
+  background: var(--card-bg);
+  color: var(--text);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-modal);
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-.tariff-modal-head {
+.modal-box-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 14px 18px;
-  background: var(--c1, var(--dark));
-  box-shadow: 0 4px 0 var(--c1d, #000);
+  background: var(--dark);
+  box-shadow: 0 4px 0 #000;
 }
-.tariff-modal-title {
+.modal-box-title {
   font-family: var(--fd);
   font-weight: 800;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-size: clamp(16px, 2vw, 21px);
-  color: var(--ontitle, #fff);
+  color: #F3ECE0;
 }
 .modal-close {
   width: 32px; height: 32px;
   border-radius: 999px;
   background: rgba(255,255,255,0.15);
-  color: var(--ontitle, #fff);
+  color: #F3ECE0;
   display: flex; align-items: center; justify-content: center;
   font-size: 16px;
 }
 
-.tariff-modal-tabs {
-  display: none;
-  gap: 6px;
-  padding: 10px 16px 0;
-}
-.tariff-modal-tabs button {
-  flex: 1;
-  padding: 8px 6px;
-  font-family: var(--fd);
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 999px;
-  background: var(--panel, var(--chip-bg));
+/* ================= Inline tariff-card details — copied from reference's card sub-blocks ================= */
+.tm-info-row {
+  background: var(--panel, var(--card-bg));
   border: 1px solid var(--line, var(--border));
+  border-radius: 11px;
+  padding: 8px 12px;
+  text-align: center;
+  font-weight: 600;
   color: var(--ttxt2, var(--text-muted));
 }
-.tariff-modal-tabs button.active {
-  background: var(--c2, var(--amber));
-  color: var(--onc2, #fff);
-  border-color: transparent;
-}
-
-.tariff-modal-body {
-  flex: 1;
-  min-height: 0;
-  padding: 16px 18px 18px;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr 1fr;
-  gap: 16px;
-  overflow-y: auto; /* safety-net fallback only, layout is designed not to need it */
-}
-.tm-col { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
-.tm-col h4 {
+.tm-info-row b {
   font-family: var(--fd);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--acc, var(--gold));
   font-weight: 800;
-  text-align: center;
+  color: var(--acc, var(--gold));
 }
+.tm-info-row.route { font-weight: 800; }
 .tm-gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -387,6 +281,7 @@
   font-size: clamp(0.72rem, 0.55vw + 0.6rem, 0.86rem);
   line-height: 1.4;
 }
+.tm-prices { display: flex; flex-direction: column; gap: 7px; }
 .tm-price-row {
   display: flex; justify-content: space-between; align-items: center;
   padding: 6px 6px 6px 12px;
@@ -428,31 +323,6 @@
   color: var(--ttxt, var(--text));
 }
 .tm-checklist li::before { content: '✓'; color: var(--acc, var(--green)); font-weight: 800; }
-
-.tm-cta {
-  margin-top: auto;
-  padding: 13px;
-  border-radius: 13px;
-  background: var(--c1, var(--dark));
-  color: var(--ontitle, #fff);
-  font-family: var(--fd);
-  font-weight: 800;
-  font-size: 13px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  text-align: center;
-  box-shadow: 0 3px 0 var(--c1d, #000);
-}
-.tm-cta:hover { transform: translateY(-2px); }
-
-@media (max-width: 860px) {
-  .tariff-modal-tabs { display: flex; }
-  .tariff-modal-body {
-    grid-template-columns: 1fr;
-  }
-  .tm-col { display: none; }
-  .tm-col.active { display: flex; }
-}
 
 /* ================= Media modal ================= */
 .media-modal {

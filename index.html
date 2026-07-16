@@ -14,39 +14,22 @@
 </head>
 <body>
 
-<header class="site-header">
-  <div class="container">
-    <a href="#" class="brand">
-      <img src="assets/img/logo-placeholder.svg" alt="EtiHAD">
-      <span>EtiHAD</span>
-    </a>
-    <nav class="header-nav">
-      <a href="#tariffs" data-i18n="nav_tariffs">Тарифы</a>
-      <a href="#faq" data-i18n="nav_faq">Вопросы</a>
-      <a href="#contacts" data-i18n="nav_contacts">Контакты</a>
-    </nav>
-    <div class="header-actions">
-      <div class="lang-switch">
-        <button type="button" data-lang="ru">RU</button>
-        <button type="button" data-lang="uz">ЎЗ</button>
-        <button type="button" data-lang="tj">ТҶ</button>
-      </div>
-      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Theme">☾</button>
-    </div>
+<div class="corner-controls">
+  <div class="lang-switch">
+    <button type="button" data-lang="ru">RU</button>
+    <button type="button" data-lang="uz">ЎЗ</button>
+    <button type="button" data-lang="tj">ТҶ</button>
   </div>
-</header>
+  <button type="button" id="themeToggle" class="theme-toggle" aria-label="Theme">☾</button>
+</div>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-label" data-i18n="hero_label">Умра · 2026</div>
-    <h1 data-i18n="hero_title">Ваш путь в <span>Мекку и Медину</span></h1>
-    <p class="hero-sub" data-i18n="hero_sub">Перелёт, отели, питание и полное сопровождение — всё включено в один пакет.</p>
-    <div class="hero-line"></div>
-    <a href="#tariffs" class="hero-cta" id="heroRequestBtn">
-      <span data-i18n="hero_cta">Смотреть тарифы</span>
-    </a>
-  </div>
-</section>
+<div class="wrap">
+
+<div class="brand">
+  <h1>EtiHAD</h1>
+  <div class="u"></div>
+  <p data-i18n="hero_sub">Перелёт, отели, питание и полное сопровождение — всё включено в один пакет.</p>
+</div>
 
 <section class="section" id="tariffs">
   <div class="container">
@@ -78,43 +61,13 @@
   </div>
 </section>
 
+</div><!-- /.wrap -->
+
 <footer class="site-footer">
   <div class="container">
     EtiHAD © <span id="year"></span> — <span data-i18n="footer_rights">Все права защищены.</span>
   </div>
 </footer>
-
-<!-- ============ Tariff detail modal ============ -->
-<div class="modal-backdrop" id="tariffBackdrop">
-  <div class="tariff-modal" id="tariffModal">
-    <div class="tariff-modal-head">
-      <div class="tariff-modal-title" id="tariffModalTitle"></div>
-      <button type="button" class="modal-close" id="tariffModalCloseBtn" aria-label="Close">✕</button>
-    </div>
-    <div class="tariff-modal-tabs">
-      <button type="button" data-i18n="tab_prices">Цены и фото</button>
-      <button type="button" data-i18n="tab_hotels">Отели</button>
-      <button type="button" data-i18n="tab_flight">Перелёт</button>
-    </div>
-    <div class="tariff-modal-body">
-      <div class="tm-col active">
-        <h4 data-i18n="col_gallery_prices">Фото и цены</h4>
-        <div class="tm-gallery" id="tmGallery"></div>
-        <div id="tmPrices"></div>
-      </div>
-      <div class="tm-col">
-        <h4 data-i18n="col_hotels">Отели по городам</h4>
-        <div id="tmHotels"></div>
-      </div>
-      <div class="tm-col">
-        <h4 data-i18n="col_flight_info">Перелёт, питание, включено</h4>
-        <div id="tmFlight"></div>
-        <ul class="tm-checklist" id="tmChecklist"></ul>
-        <div class="tm-cta" id="tmCta"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ============ Media (photo/video) modal ============ -->
 <div class="modal-backdrop" id="mediaBackdrop">
@@ -139,9 +92,9 @@
 
 <!-- ============ Lead form modal ============ -->
 <div class="modal-backdrop" id="leadBackdrop">
-  <div class="tariff-modal" style="max-width:420px;">
-    <div class="tariff-modal-head">
-      <div class="tariff-modal-title" data-i18n="form_title">Оставить заявку</div>
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-box-head">
+      <div class="modal-box-title" data-i18n="form_title">Оставить заявку</div>
       <button type="button" class="modal-close" id="leadModalCloseBtn" aria-label="Close">✕</button>
     </div>
     <div style="padding:20px 22px;">

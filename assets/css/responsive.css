@@ -1,11 +1,10 @@
 @media (max-width: 720px) {
-  .header-nav { display: none; }
   .cards-grid { grid-template-columns: 1fr 1fr; }
   .contacts-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 520px) {
   .cards-grid { grid-template-columns: 1fr; }
-  .hero { padding: 44px 18px 36px; }
+  .wrap { padding: 44px 16px 32px; }
   .section { padding: 40px 0; }
 }
