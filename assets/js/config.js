@@ -22,7 +22,7 @@ export const TELEGRAM_CHAT_ID = '1739109071';
 // Ranges include row 1 (headers) — sheetsClient.js maps columns by header
 // name, so the client is table-order independent as long as header text matches.
 export const SHEET_RANGES = [
-  'Tariffs!A1:Z200',
+  'Tariffs!A1:AZ200',
   'TariffHotels!A1:Z500',
   'Media!A1:Z500',
   'FAQ!A1:Z100',

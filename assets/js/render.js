@@ -80,13 +80,16 @@ export function renderTariffs() {
     const isPlaceholder = tf.is_placeholder === 'TRUE';
     const name = field(tf, 'name');
     const desc = field(tf, 'short_desc');
+    const duration = field(tf, 'duration_days');
+    const departure = field(tf, 'departure_day');
     const price = tf.price_quad || tf.price_triple || tf.price_double || tf.price_single || '';
+    const theme = tf.theme || 't-gold';
     return `
-      <div class="pkg-card" data-tariff-id="${tf.id}" role="button" tabindex="0">
-        ${isPlaceholder ? `<div class="pkg-placeholder-badge">${t('coming_soon')}</div>` : `<div class="pkg-badge">${tf.duration_days || ''} · ${tf.departure_day || ''}</div>`}
-        <div class="pkg-name">${name}</div>
-        <div class="pkg-duration">${tf.duration_days ? tf.duration_days + ' ' : ''}${tf.flight_route || ''}</div>
-        ${price ? `<div class="pkg-price">${t('price_from')} $${price}<small> / ${t('per_person')}</small></div>` : ''}
+      <div class="pkg-card ${theme}" data-tariff-id="${tf.id}" role="button" tabindex="0">
+        <div class="pkg-title-banner">${name}</div>
+        ${isPlaceholder ? `<div class="pkg-placeholder-badge">${t('coming_soon')}</div>` : `<div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>`}
+        <div class="pkg-duration">${tf.flight_route || ''}</div>
+        ${price ? `<div class="pkg-price"><span>${t('price_from')} / ${t('per_person')}</span><b>$${price}</b></div>` : ''}
         <div class="pkg-desc">${desc}</div>
         <div class="pkg-cta" data-role="request" data-tariff-id="${tf.id}">${isPlaceholder ? t('coming_soon') : t('btn_request')}</div>
       </div>

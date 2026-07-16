@@ -1,20 +1,20 @@
 tariff_id,city,hotel_name,nights,meal_plan_ru,meal_plan_uz,meal_plan_tj,maps_url,extra_badge_label_ru,extra_badge_label_uz,extra_badge_label_tj,extra_price,extra_type
-swissotel10,Madina,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
-swissotel10,Makkah,Swissotel Makkah,5 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Swissotel+Makkah,+160$ доп. питание,+160$ qo'shimcha ovqat,+160$ хӯроки иловагӣ,160,ovqat
-jumeirah10,Madina,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
-jumeirah10,Makkah,Jumeirah Jabal Omar,5 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Jumeirah+Jabal+Omar+Makkah,+200$ доп. питание,+200$ qo'shimcha ovqat,+200$ хӯроки иловагӣ,200,ovqat
-mtowers10,Madina,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
-mtowers10,Makkah,Makkah Towers,5 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Makkah+Towers,+160$ доп. питание,+160$ qo'shimcha ovqat,+160$ хӯроки иловагӣ,160,ovqat
-anjum10,Madina,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
-anjum10,Makkah,Anjum Hotel,5 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Anjum+Hotel+Makkah,+100$ доп. питание,+100$ qo'shimcha ovqat,+100$ хӯроки иловагӣ,100,ovqat
-saja10,Madina,Saja Al Madinah,4 ночи,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Saja+Al+Madinah,,,,,
-saja10,Makkah,Taj Park Hotel,5 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Taj+Park+Hotel+Makkah,,,,,
-jumeirah13,Jeddah,Vivid Jeddah Hotel,1 ночь,Завтрак,Nonushta,Наҳорӣ,https://www.google.com/maps/search/?api=1&query=Vivid+Jeddah+Hotel,,,,,
-jumeirah13,Madina,Bosphorus Waqf Al Safi Hotel,5 ночей,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
-jumeirah13,Makkah,Jumeirah Jabal Omar,6 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Jumeirah+Jabal+Omar+Makkah,+200$ доп. питание,+200$ qo'shimcha ovqat,+200$ хӯроки иловагӣ,200,ovqat
-anjum13,Jeddah,Hawada Hotel,1 ночь,Завтрак,Nonushta,Наҳорӣ,https://www.google.com/maps/search/?api=1&query=Hawada+Hotel+Jeddah,,,,,
-anjum13,Madina,Bosphorus Waqf Al Safi Hotel,5 ночей,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
-anjum13,Makkah,Anjum Hotel,6 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Anjum+Hotel+Makkah,+100$ доп. питание,+100$ qo'shimcha ovqat,+100$ хӯроки иловагӣ,100,ovqat
-taj13,Jeddah,Mukhtara Plaza Hotel,1 ночь,Завтрак,Nonushta,Наҳорӣ,https://www.google.com/maps/search/?api=1&query=Mukhtara+Plaza+Hotel+Jeddah,,,,,
-taj13,Madina,Saja Al Madinah,5 ночей,2 приёма пищи (шведский стол),2 mahal shved stoli,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Saja+Al+Madinah,,,,,
-taj13,Makkah,Taj Park Hotel,6 ночей,1 приём пищи (шведский стол),1 mahal shved stoli,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Taj+Park+Hotel+Makkah,,,,,
+swissotel10,Медина,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
+swissotel10,Мекка,Swissotel Makkah,5 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Swissotel+Makkah,+160$ доп. питание,+160$ қўшимча овқат,+160$ хӯроки иловагӣ,160,ovqat
+jumeirah10,Медина,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
+jumeirah10,Мекка,Jumeirah Jabal Omar,5 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Jumeirah+Jabal+Omar+Makkah,+200$ доп. питание,+200$ қўшимча овқат,+200$ хӯроки иловагӣ,200,ovqat
+mtowers10,Медина,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
+mtowers10,Мекка,Makkah Towers,5 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Makkah+Towers,+160$ доп. питание,+160$ қўшимча овқат,+160$ хӯроки иловагӣ,160,ovqat
+anjum10,Медина,Bosphorus Waqf Al Safi Hotel,4 ночи,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
+anjum10,Мекка,Anjum Hotel,5 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Anjum+Hotel+Makkah,+100$ доп. питание,+100$ қўшимча овқат,+100$ хӯроки иловагӣ,100,ovqat
+saja10,Медина,Saja Al Madinah,4 ночи,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Saja+Al+Madinah,,,,,
+saja10,Мекка,Taj Park Hotel,5 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Taj+Park+Hotel+Makkah,,,,,
+jumeirah13,Джидда,Vivid Jeddah Hotel,1 ночь,Завтрак,Нонушта,Наҳорӣ,https://www.google.com/maps/search/?api=1&query=Vivid+Jeddah+Hotel,,,,,
+jumeirah13,Медина,Bosphorus Waqf Al Safi Hotel,5 ночей,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
+jumeirah13,Мекка,Jumeirah Jabal Omar,6 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Jumeirah+Jabal+Omar+Makkah,+200$ доп. питание,+200$ қўшимча овқат,+200$ хӯроки иловагӣ,200,ovqat
+anjum13,Джидда,Hawada Hotel,1 ночь,Завтрак,Нонушта,Наҳорӣ,https://www.google.com/maps/search/?api=1&query=Hawada+Hotel+Jeddah,,,,,
+anjum13,Медина,Bosphorus Waqf Al Safi Hotel,5 ночей,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Bosphorus+Waqf+Al+Safi+Hotel+Madinah,,,,,
+anjum13,Мекка,Anjum Hotel,6 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Anjum+Hotel+Makkah,+100$ доп. питание,+100$ қўшимча овқат,+100$ хӯроки иловагӣ,100,ovqat
+taj13,Джидда,Mukhtara Plaza Hotel,1 ночь,Завтрак,Нонушта,Наҳорӣ,https://www.google.com/maps/search/?api=1&query=Mukhtara+Plaza+Hotel+Jeddah,,,,,
+taj13,Медина,Saja Al Madinah,5 ночей,2 приёма пищи (шведский стол),2 маҳал швед столи,2 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Saja+Al+Madinah,,,,,
+taj13,Мекка,Taj Park Hotel,6 ночей,1 приём пищи (шведский стол),1 маҳал швед столи,1 хӯрок (бофеӣ),https://www.google.com/maps/search/?api=1&query=Taj+Park+Hotel+Makkah,,,,,

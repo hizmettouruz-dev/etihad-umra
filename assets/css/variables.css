@@ -1,75 +1,76 @@
 :root {
-  --gold: #D4AF37;
-  --gold-light: #F4D77B;
-  --gold-pale: #F8F3E3;
+  --fd: 'Montserrat', system-ui, sans-serif;
+  --fb: 'Mulish', system-ui, sans-serif;
+  --font-display: var(--fd);
+  --font-body: var(--fb);
 
-  --dark: #0F2E25;
-  --dark-2: #163A30;
-  --dark-3: #1D4A3D;
+  --page: #ECE6DB;
+  --accent-orange: #ED5A1B;
 
-  --text: #2E3B35;
-  --text-muted: #6E7B75;
+  --gold: #B89039;
+  --gold-light: #D9BE7A;
+  --gold-pale: #F3ECDA;
 
-  --border: rgba(212, 175, 55, 0.18);
+  --dark: #211E1B;
+  --dark-2: #2B2622;
+  --dark-3: #362F28;
 
-  --white: #FCFCFA;
+  --text: #2B2A28;
+  --text-muted: #6B5F50;
 
-  --green: #1F5B4F;
-  --green-light: #E6F2EE;
+  --border: #E0D6C6;
 
-  --blue: #285A74;
-  --blue-light: #EAF2FB;
+  --white: #FFFCF8;
 
-  --amber: #8A5A1F;
-  --amber-light: #FAEEDB;
+  --green: #15604A;
+  --green-light: #E7F0EA;
 
-  --teal: #1B6B63;
-  --teal-light: #E2F3F1;
+  --blue: #1C6695;
+  --blue-light: #E9F1F7;
 
-  --danger: #B3441E;
+  --amber: #8A5A24;
+  --amber-light: #F8F0DE;
+
+  --teal: #0E625A;
+  --teal-light: #E4F2F0;
+
+  --danger: #9B2E2E;
   --danger-light: #FBEAE2;
 
-  --bg: #FCFCFA;
-  --card-bg: #ffffff;
-  --chip-bg: #ffffff;
+  --bg: var(--page);
+  --card-bg: #F1F4F9;
+  --chip-bg: #FCFDFF;
 
   --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-md: 13px;
+  --radius-lg: 22px;
 
-  --shadow-card: 0 2px 14px rgba(15, 46, 37, 0.08);
-  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.35);
-
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'DM Sans', sans-serif;
+  --shadow-card: 0 10px 26px rgba(40, 30, 20, 0.10);
+  --shadow-modal: 0 24px 64px rgba(30, 20, 10, 0.35);
 }
 
 [data-theme="dark"] {
-  --bg: #232E29;
-  --card-bg: #2D3C36;
-  --chip-bg: #2D3C36;
+  --page: #201C17;
+  --bg: #201C17;
+  --card-bg: #2A241D;
+  --chip-bg: #2A241D;
 
-  --dark: #C6D8CE;
-  --dark-2: #2A3830;
-  --dark-3: #304038;
+  --dark: #F3ECE0;
+  --text: #F0E9DC;
+  --text-muted: #B7A990;
 
-  --text: #D4E4DA;
-  --text-muted: #8FAF9F;
-
-  --border: rgba(212, 175, 55, 0.22);
-  --gold-pale: rgba(212, 175, 55, 0.11);
-
-  --amber-light: rgba(212, 175, 55, 0.12);
-  --green-light: rgba(31, 91, 79, 0.22);
-  --blue-light: rgba(40, 90, 116, 0.22);
-  --teal-light: rgba(27, 107, 99, 0.22);
-  --danger-light: rgba(179, 68, 30, 0.2);
-
-  --amber: #CFA050;
-  --green: #4AAE92;
-  --blue: #5898B8;
-  --teal: #40B0A4;
-  --danger: #D97A52;
+  --border: #46392A;
+  --gold-pale: rgba(184, 144, 57, 0.16);
 
   --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.6);
 }
+
+/* ===== Per-tariff themes — copied from paket.familymandarin.uz ===== */
+.t-gold    { --c1:#1E3157; --c1d:#0F1C34; --c2:#B89039; --c2d:#8A6A22; --ontitle:#E6D9B0; --onc2:#1A1508; --acc:#2C4E82; --tbg:#F1F4F9; --panel:#FCFDFF; --line:#D9E1EE; --ttxt:#232B39; --ttxt2:#5C6675; }
+.t-emerald { --c1:#134D3C; --c1d:#0B3327; --c2:#C2A24E; --c2d:#917430; --ontitle:#EFE6CB; --onc2:#143A2E; --acc:#15604A; --tbg:#F3F6F1; --panel:#FBFDFA; --line:#DBE7DD; --ttxt:#233028; --ttxt2:#566A5E; }
+.t-blue    { --c1:#1F6FA0; --c1d:#134B6E; --c2:#15506F; --c2d:#0E3A52; --ontitle:#FFFFFF; --onc2:#FFFFFF; --acc:#1C6695; --tbg:#F1F6FA; --panel:#FBFDFF; --line:#D7E6F1; --ttxt:#233642; --ttxt2:#5A6E7C; }
+.t-teal    { --c1:#0F6E68; --c1d:#0A4A46; --c2:#0C5650; --c2d:#083E3A; --ontitle:#FFFFFF; --onc2:#FFFFFF; --acc:#0E625A; --tbg:#EFF7F6; --panel:#FBFEFD; --line:#D3E8E5; --ttxt:#22332F; --ttxt2:#5A6E6A; }
+.t-tower   { --c1:#4A2E6B; --c1d:#331E4C; --c2:#B8862F; --c2d:#8A6420; --ontitle:#F2E7CF; --onc2:#241708; --acc:#5B3B7A; --tbg:#F6F3FA; --panel:#FDFCFE; --line:#E5DCEE; --ttxt:#2C2338; --ttxt2:#665A78; }
+.t-tawhid  { --c1:#12100C; --c1d:#000000; --c2:#C9A24B; --c2d:#9A7A2E; --ontitle:#E8CF92; --onc2:#1A1206; --acc:#B08A38; --tbg:#F7F3EA; --panel:#FFFDF8; --line:#EAE0CC; --ttxt:#2A2418; --ttxt2:#6E6144; }
+.t-swiss   { --c1:#8E2A2A; --c1d:#5E1A1A; --c2:#B89039; --c2d:#8A6A22; --ontitle:#F7E6CC; --onc2:#241410; --acc:#9B2E2E; --tbg:#FBF4F2; --panel:#FFFCFB; --line:#ECD8D4; --ttxt:#2E211E; --ttxt2:#7C615B; }
+.t-eba     { --c1:#7A4A1F; --c1d:#573414; --c2:#B8862F; --c2d:#8A6420; --ontitle:#F4E6C8; --onc2:#241708; --acc:#8A5A24; --tbg:#F8F4EC; --panel:#FEFCF7; --line:#EBE0CC; --ttxt:#2E2417; --ttxt2:#6E6045; }

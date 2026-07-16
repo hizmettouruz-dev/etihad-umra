@@ -25,6 +25,8 @@ export function openTariffModal(tariffId, focusRequest = false) {
     .filter((r) => r.tariff_id === tariffId)
     .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
 
+  const theme = tf.theme || 't-gold';
+  el('tariffModal').className = `tariff-modal ${theme}`;
   el('tariffModalTitle').textContent = field(tf, 'name');
 
   // Column 1 — gallery + prices
@@ -67,7 +69,7 @@ export function openTariffModal(tariffId, focusRequest = false) {
   const inclusions = field(tf, 'inclusions').split('|').map((s) => s.trim()).filter(Boolean);
   el('tmFlight').innerHTML = `
     ${tf.flight_route ? `<div class="tm-info-row"><b>${tf.flight_route}</b></div>` : ''}
-    ${tf.flight_details ? `<div class="tm-info-row">${tf.flight_details}</div>` : ''}
+    ${field(tf, 'flight_details') ? `<div class="tm-info-row">${field(tf, 'flight_details')}</div>` : ''}
     ${field(tf, 'meal_plan') ? `<div class="tm-info-row">${field(tf, 'meal_plan')}</div>` : ''}
   `;
   el('tmChecklist').innerHTML = inclusions.map((i) => `<li>${i}</li>`).join('');
