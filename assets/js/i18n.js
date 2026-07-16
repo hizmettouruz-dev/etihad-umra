@@ -12,6 +12,8 @@ const DICT = {
   btn_back: { ru: 'Назад', uz: 'Орқага', tj: 'Бозгашт' },
   btn_view: { ru: 'Смотреть', uz: 'Кўриш', tj: 'Дидан' },
   pkg_label: { ru: 'Пакет', uz: 'Пакет', tj: 'Бастаи сафар' },
+  date_label: { ru: 'Дата выезда — возвращения', uz: 'Жўнаш — қайтиш санаси', tj: 'Санаи рафтан — баргаштан' },
+  btn_book_dates: { ru: 'Забронировать эти даты', uz: 'Ушбу саналарни банд қилиш', tj: 'Ин санаҳоро банд кардан' },
 
   faq_label: { ru: 'FAQ', uz: 'Савол-жавоб', tj: 'Саволу ҷавоб' },
   faq_title: { ru: 'Часто задаваемые вопросы', uz: 'Кўп бериладиган саволлар', tj: 'Саволҳои зуд-зуд додашаванда' },
@@ -22,6 +24,9 @@ const DICT = {
   contact_address: { ru: 'Адрес', uz: 'Манзил', tj: 'Суроға' },
   contact_hours: { ru: 'Часы работы', uz: 'Иш вақти', tj: 'Соатҳои корӣ' },
   contact_social: { ru: 'Мы в сети', uz: 'Ижтимоий тармоқлар', tj: 'Шабакаҳои иҷтимоӣ' },
+  contact_instagram: { ru: 'Написать в Instagram', uz: 'Instagram orqali yozish', tj: 'Дар Instagram навиштан' },
+  contact_telegram: { ru: 'Написать в Telegram', uz: 'Telegram orqali yozish', tj: 'Дар Telegram навиштан' },
+  contact_widget_label: { ru: 'Связаться с нами', uz: 'Биз билан боғланинг', tj: 'Бо мо тамос гиред' },
 
   form_title: { ru: 'Оставить заявку', uz: 'Ариза қолдириш', tj: 'Дархост гузоштан' },
   form_firstname: { ru: 'Имя', uz: 'Исм', tj: 'Ном' },

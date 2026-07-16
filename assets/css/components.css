@@ -73,6 +73,67 @@
   letter-spacing: 0.3px;
 }
 
+/* ================= Floating contact widget ================= */
+.contact-widget {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+.contact-toggle-btn {
+  width: 56px; height: 56px;
+  border-radius: 999px;
+  background: var(--accent-orange);
+  color: #fff;
+  font-size: 26px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 22px rgba(40,30,20,0.30);
+  transition: transform 0.2s;
+}
+.contact-toggle-btn:hover { transform: scale(1.06); }
+.contact-panel {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  width: 250px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  padding: 14px;
+}
+.contact-panel.open { display: flex; }
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: var(--chip-bg);
+  border: 1px solid var(--border);
+  font-family: var(--fb);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--text);
+}
+.contact-link .ico { font-size: 16px; }
+.contact-lead-btn {
+  margin-top: 4px;
+  padding: 12px;
+  border-radius: 13px;
+  background: var(--dark);
+  color: #F3ECE0;
+  font-family: var(--fd);
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
 /* ================= Skeletons ================= */
 .skeleton {
   position: relative;
@@ -198,11 +259,15 @@
 }
 .crumb b { color: var(--dark); }
 
-/* ================= Tariff cards (inside detail view) — styled like reference's .card/.title/.price-row ================= */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+/* ================= Tariff cards (inside detail view) — styled like reference's .cards/.col centering trick ================= */
+.detail-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 22px;
+}
+.detail-cards .pkg-card {
+  flex: 0 1 360px;
 }
 .pkg-card {
   background: var(--tbg, var(--card-bg));
@@ -241,6 +306,43 @@
   background: var(--c2, var(--amber));
   color: var(--onc2, #fff);
   box-shadow: 0 3px 0 var(--c2d, #8A6420);
+}
+
+/* ================= Date pills (one per departure-date card) ================= */
+.date-strip { text-align: center; }
+.date-label {
+  font-family: var(--fb);
+  font-weight: 700;
+  color: var(--acc, var(--gold));
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.date-pills {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6px;
+}
+.date-pill {
+  background: var(--panel, var(--chip-bg));
+  border: 1px solid var(--line, var(--border));
+  border-radius: 9px;
+  padding: 6px 13px;
+  font-family: var(--fd);
+  font-weight: 700;
+  color: var(--ttxt, var(--text));
+  font-size: 14px;
+}
+.date-dash {
+  font-family: var(--fd);
+  font-weight: 800;
+  color: var(--acc, var(--gold));
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -1px;
+  padding: 0 2px;
 }
 .pkg-placeholder-badge {
   align-self: center;

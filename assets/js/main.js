@@ -3,6 +3,7 @@ import { fetchSiteData } from './sheetsClient.js';
 import { setSiteData, renderAll, renderSkeletons, renderError, closeTariffDetail } from './render.js';
 import { initMediaModal } from './mediaModal.js';
 import { initLeadForm } from './leadForm.js';
+import { initContactWidget, renderContactWidget } from './contactWidget.js';
 
 function initThemeToggle() {
   const KEY = 'theme';
@@ -33,12 +34,14 @@ function bootstrap() {
   initThemeToggle();
   initMediaModal();
   initLeadForm();
+  initContactWidget();
 
   document.getElementById('tariffBackBtn').addEventListener('click', closeTariffDetail);
 
   document.addEventListener('langchange', () => {
     // Data already fetched — re-render from memory, no new network request.
     import('./render.js').then((m) => m.renderAll());
+    renderContactWidget();
   });
 
   loadData();

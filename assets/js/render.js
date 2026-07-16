@@ -1,7 +1,8 @@
 import { t, getLang } from './i18n.js';
 import { openMediaModal } from './mediaModal.js';
 import { openLeadForm } from './leadForm.js';
-import { GH_PHOTO_BASE } from './config.js';
+import { GH_PHOTO_BASE, GENERIC_MEDIA } from './config.js';
+import { datesForDepartureDay } from './departureDates.js';
 
 // In-memory only — never persisted, so a language switch or re-render never
 // shows stale data; it just re-projects the same freshly-fetched objects.
@@ -124,6 +125,21 @@ export function renderTariffs() {
   });
 }
 
+function datePillHtml(dates) {
+  if (!dates.length) return '';
+  const [start, end] = dates;
+  return `
+    <div class="date-strip">
+      <div class="date-label">${t('date_label')}</div>
+      <div class="date-pills">
+        <div class="date-pill">${start}</div>
+        <div class="date-dash">→</div>
+        <div class="date-pill">${end}</div>
+      </div>
+    </div>
+  `;
+}
+
 function renderTariffDetail(tariffId) {
   const cardsEl = document.getElementById('tariffDetailCards');
   const tf = siteData.tariffs.find((r) => r.id === tariffId);
@@ -134,27 +150,34 @@ function renderTariffDetail(tariffId) {
   const departure = field(tf, 'departure_day');
   const theme = tf.theme || 't-gold';
   const hotels = siteData.tariffHotels.filter((r) => r.tariff_id === tf.id);
-  const media = siteData.media
-    .filter((r) => r.tariff_id === tf.id)
-    .sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+  const media = [
+    ...siteData.media.filter((r) => r.tariff_id === tf.id).sort((a, b) => Number(a.order || 0) - Number(b.order || 0)),
+    ...GENERIC_MEDIA,
+  ];
   const desc = field(tf, 'short_desc');
   const inclusions = field(tf, 'inclusions').split('|').map((s) => s.trim()).filter(Boolean);
+  const dateOptions = datesForDepartureDay(tf.departure_day_ru);
+  const bodyHtml = `
+    <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
+    ${desc ? `<div class="pkg-desc">${desc}</div>` : ''}
+    ${galleryHtml(media)}
+    ${tf.flight_route ? `<div class="tm-info-row route"><b>${tf.flight_route}</b></div>` : ''}
+    ${field(tf, 'flight_details') ? `<div class="tm-info-row">${field(tf, 'flight_details')}</div>` : ''}
+    ${hotelsHtml(hotels)}
+    ${field(tf, 'meal_plan') ? `<div class="tm-info-row">${field(tf, 'meal_plan')}</div>` : ''}
+    ${pricesHtml(tf)}
+    ${inclusions.length ? `<ul class="tm-checklist">${inclusions.map((i) => `<li>${i}</li>`).join('')}</ul>` : ''}
+  `;
 
-  cardsEl.innerHTML = `
+  const cardsToRender = dateOptions.length ? dateOptions : [null];
+  cardsEl.innerHTML = cardsToRender.map((dates) => `
     <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
       <div class="pkg-title-banner">${name}</div>
-      <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
-      ${desc ? `<div class="pkg-desc">${desc}</div>` : ''}
-      ${galleryHtml(media)}
-      ${tf.flight_route ? `<div class="tm-info-row route"><b>${tf.flight_route}</b></div>` : ''}
-      ${field(tf, 'flight_details') ? `<div class="tm-info-row">${field(tf, 'flight_details')}</div>` : ''}
-      ${hotelsHtml(hotels)}
-      ${field(tf, 'meal_plan') ? `<div class="tm-info-row">${field(tf, 'meal_plan')}</div>` : ''}
-      ${pricesHtml(tf)}
-      ${inclusions.length ? `<ul class="tm-checklist">${inclusions.map((i) => `<li>${i}</li>`).join('')}</ul>` : ''}
-      <div class="pkg-cta" data-role="request" data-tariff-id="${tf.id}">${t('btn_request')}</div>
+      ${dates ? datePillHtml(dates) : ''}
+      ${bodyHtml}
+      <div class="pkg-cta" data-role="request" data-date-range="${dates ? `${dates[0]} – ${dates[1]}` : ''}">${t('btn_book_dates')}</div>
     </div>
-  `;
+  `).join('');
 
   cardsEl.querySelectorAll('.tm-gallery-item').forEach((node) => {
     node.addEventListener('click', () => {
@@ -167,10 +190,12 @@ function renderTariffDetail(tariffId) {
     });
   });
 
-  const requestBtn = cardsEl.querySelector('[data-role="request"]');
-  if (requestBtn) {
-    requestBtn.addEventListener('click', () => openLeadForm(name));
-  }
+  cardsEl.querySelectorAll('[data-role="request"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const dateRange = btn.dataset.dateRange;
+      openLeadForm(dateRange ? `${name} (${dateRange})` : name);
+    });
+  });
 }
 
 export function openTariffDetail(tariffId) {
