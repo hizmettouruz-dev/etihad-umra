@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EtiHAD — Умра турлари</title>
+<meta name="description" content="EtiHAD — Умра сафарлари: перелёт, отель, питание, полное сопровождение.">
+<link rel="icon" type="image/svg+xml" href="assets/img/logo-placeholder.svg">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="#" class="brand">
+      <img src="assets/img/logo-placeholder.svg" alt="EtiHAD">
+      <span>EtiHAD</span>
+    </a>
+    <nav class="header-nav">
+      <a href="#tariffs" data-i18n="nav_tariffs">Тарифы</a>
+      <a href="#faq" data-i18n="nav_faq">Вопросы</a>
+      <a href="#contacts" data-i18n="nav_contacts">Контакты</a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-switch">
+        <button type="button" data-lang="ru">RU</button>
+        <button type="button" data-lang="uz">ЎЗ</button>
+        <button type="button" data-lang="tj">ТҶ</button>
+      </div>
+      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Theme">☾</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label" data-i18n="hero_label">Умра · 2026</div>
+    <h1 data-i18n="hero_title">Ваш путь в <span>Мекку и Медину</span></h1>
+    <p class="hero-sub" data-i18n="hero_sub">Перелёт, отели, питание и полное сопровождение — всё включено в один пакет.</p>
+    <div class="hero-line"></div>
+    <a href="#tariffs" class="hero-cta" id="heroRequestBtn">
+      <span data-i18n="hero_cta">Смотреть тарифы</span>
+    </a>
+  </div>
+</section>
+
+<section class="section" id="tariffs">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label" data-i18n="tariffs_label">Пакеты туров</div>
+      <h2 class="section-title" data-i18n="tariffs_title">Выберите свой тариф</h2>
+    </div>
+    <div class="cards-grid" id="tariffs-grid"></div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label" data-i18n="faq_label">FAQ</div>
+      <h2 class="section-title" data-i18n="faq_title">Часто задаваемые вопросы</h2>
+    </div>
+    <div class="faq-list" id="faq-list" style="max-width:720px;margin:0 auto;"></div>
+  </div>
+</section>
+
+<section class="section" id="contacts">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label" data-i18n="contacts_label">Связь с нами</div>
+      <h2 class="section-title" data-i18n="contacts_title">Контакты и адрес</h2>
+    </div>
+    <div class="contacts-grid" id="contacts-grid"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    EtiHAD © <span id="year"></span> — <span data-i18n="footer_rights">Все права защищены.</span>
+  </div>
+</footer>
+
+<!-- ============ Tariff detail modal ============ -->
+<div class="modal-backdrop" id="tariffBackdrop">
+  <div class="tariff-modal">
+    <div class="tariff-modal-head">
+      <div class="tariff-modal-title" id="tariffModalTitle"></div>
+      <button type="button" class="modal-close" id="tariffModalCloseBtn" aria-label="Close">✕</button>
+    </div>
+    <div class="tariff-modal-tabs">
+      <button type="button" data-i18n="tab_prices">Цены и фото</button>
+      <button type="button" data-i18n="tab_hotels">Отели</button>
+      <button type="button" data-i18n="tab_flight">Перелёт</button>
+    </div>
+    <div class="tariff-modal-body">
+      <div class="tm-col active">
+        <h4 data-i18n="col_gallery_prices">Фото и цены</h4>
+        <div class="tm-gallery" id="tmGallery"></div>
+        <div id="tmPrices"></div>
+      </div>
+      <div class="tm-col">
+        <h4 data-i18n="col_hotels">Отели по городам</h4>
+        <div id="tmHotels"></div>
+      </div>
+      <div class="tm-col">
+        <h4 data-i18n="col_flight_info">Перелёт, питание, включено</h4>
+        <div id="tmFlight"></div>
+        <ul class="tm-checklist" id="tmChecklist"></ul>
+        <div class="tm-cta" id="tmCta"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Media (photo/video) modal ============ -->
+<div class="modal-backdrop" id="mediaBackdrop">
+  <div class="media-modal">
+    <div class="media-modal-head">
+      <span id="mediaLabel" style="font-size:13px;"></span>
+      <button type="button" class="modal-close" id="mediaCloseBtn" aria-label="Close">✕</button>
+    </div>
+    <div class="media-stage">
+      <button type="button" class="media-nav-btn prev" id="mediaPrev" aria-label="Prev">‹</button>
+      <video id="mediaVideo" playsinline controls style="display:none;"></video>
+      <img id="mediaImage" alt="" style="display:none;">
+      <button type="button" class="media-nav-btn next" id="mediaNext" aria-label="Next">›</button>
+    </div>
+    <div class="media-footer">
+      <span class="media-label" id="mediaFooterLabel"></span>
+      <button type="button" class="media-share-btn" id="mediaShareBtn">💾</button>
+    </div>
+    <div class="media-thumbs" id="mediaThumbs"></div>
+  </div>
+</div>
+
+<!-- ============ Lead form modal ============ -->
+<div class="modal-backdrop" id="leadBackdrop">
+  <div class="tariff-modal" style="max-width:420px;">
+    <div class="tariff-modal-head">
+      <div class="tariff-modal-title" data-i18n="form_title">Оставить заявку</div>
+      <button type="button" class="modal-close" id="leadModalCloseBtn" aria-label="Close">✕</button>
+    </div>
+    <div style="padding:20px 22px;">
+      <div id="leadPackageLabel" style="display:none;font-size:12px;color:var(--gold);font-weight:600;margin-bottom:10px;"></div>
+      <form class="lead-form" id="leadForm">
+        <input type="hidden" id="leadPackageName">
+        <input type="text" class="lead-form-honeypot" id="leadHoneypot" name="company" tabindex="-1" autocomplete="off">
+        <label>
+          <span data-i18n="form_firstname">Имя</span>
+          <input type="text" id="leadFirstName" required autocomplete="given-name">
+        </label>
+        <label>
+          <span data-i18n="form_lastname">Фамилия</span>
+          <input type="text" id="leadLastName" required autocomplete="family-name">
+        </label>
+        <label>
+          <span data-i18n="form_phone">Номер телефона</span>
+          <input type="tel" id="leadPhone" required autocomplete="tel">
+        </label>
+        <label>
+          <span data-i18n="form_dates">Предпочтительные даты</span>
+          <input type="text" id="leadDates" placeholder="напр. 10-20 марта">
+        </label>
+        <button type="submit" class="lead-submit" data-i18n="form_submit">Отправить заявку</button>
+        <div class="lead-status" id="leadStatus"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

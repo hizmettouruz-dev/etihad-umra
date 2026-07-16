@@ -1,0 +1,13 @@
+tariff_id,type,gh_asset_filename,label_ru,label_uz,label_tj,order
+swissotel10,video,swissotel10-hotel.mp4,Swissotel Makkah,Swissotel Makkah,Swissotel Makkah,1
+swissotel10,video,swissotel10-madina.mp4,Bosphorus — Madina,Bosphorus — Madina,Bosphorus — Мадина,2
+jumeirah10,video,jumeirah10-hotel.mp4,Jumeirah Jabal Omar,Jumeirah Jabal Omar,Jumeirah Jabal Omar,1
+jumeirah10,video,jumeirah10-room.mp4,Номер Jumeirah,Jumeirah xonasi,Утоқи Jumeirah,2
+mtowers10,video,mtowers10-hotel.mp4,Makkah Towers,Makkah Towers,Makkah Towers,1
+anjum10,video,anjum10-hotel.mp4,Anjum Hotel,Anjum Hotel,Anjum Hotel,1
+saja10,video,saja10-hotel.mp4,Saja Al Madinah,Saja Al Madinah,Saja Al Madinah,1
+saja10,video,saja10-taj.mp4,Taj Park Hotel,Taj Park Hotel,Taj Park Hotel,2
+jumeirah13,video,jumeirah13-hotel.mp4,Jumeirah Jabal Omar,Jumeirah Jabal Omar,Jumeirah Jabal Omar,1
+anjum13,video,anjum13-hotel.mp4,Anjum Hotel,Anjum Hotel,Anjum Hotel,1
+taj13,video,taj13-hotel.mp4,Taj Park Hotel,Taj Park Hotel,Taj Park Hotel,1
+taj13,video,taj13-haram.mp4,Вид на Харам,Haram manzarasi,Манзараи Ҳарам,2
