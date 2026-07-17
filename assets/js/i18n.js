@@ -32,6 +32,8 @@ const DICT = {
   meal_gallery_label: { ru: 'Питание в пути', uz: "Yo'lda ovqatlanish", tj: 'Хӯрокхӯрӣ дар роҳ' },
   departure_dates_label: { ru: 'Даты выезда', uz: "Jo'nash sanalari", tj: 'Санаҳои рафтан' },
   choose_date_label: { ru: 'Выберите удобную дату', uz: 'Qulay sanani tanlang', tj: 'Санаи мувофиқро интихоб кунед' },
+  season_jun_sep: { ru: 'Июнь — Сентябрь', uz: 'Iyun — Sentyabr', tj: 'Июн — Сентябр' },
+  season_oct_dec: { ru: 'Октябрь — Декабрь', uz: 'Oktyabr — Dekabr', tj: 'Октябр — Декабр' },
 
   faq_label: { ru: 'FAQ', uz: 'Савол-жавоб', tj: 'Саволу ҷавоб' },
   faq_title: { ru: 'Часто задаваемые вопросы', uz: 'Кўп бериладиган саволлар', tj: 'Саволҳои зуд-зуд додашаванда' },

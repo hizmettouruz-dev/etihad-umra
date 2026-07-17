@@ -1,7 +1,10 @@
 import { t, getLang } from './i18n.js';
 import { openMediaModal } from './mediaModal.js';
 import { openLeadForm } from './leadForm.js';
-import { GH_PHOTO_BASE } from './config.js';
+import {
+  GH_PHOTO_BASE, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL,
+  CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL,
+} from './config.js';
 import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js';
 import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js';
 import { TARIFFS } from './tariffsData.js';
@@ -82,6 +85,13 @@ export function renderAll() {
 
 // ================= Tariffs (static data, see tariffsData.js) =================
 
+function priceFromText(price) {
+  const lang = getLang();
+  if (lang === 'uz') return `$${price} dan`;
+  if (lang === 'tj') return `аз $${price}`;
+  return `от $${price}`;
+}
+
 function tariffMinPrice(tf) {
   let min = Infinity;
   if (tf.mode === 'multi') {
@@ -107,7 +117,8 @@ export function renderTariffs() {
       <div class="tile ${tf.theme}" data-tariff-id="${tf.id}" role="button" tabindex="0">
         <div class="tname">${tf.name}</div>
         <div class="tsub">${t('pkg_label')}</div>
-        <div class="tsub-info">${price ? `${t('price_from')} $${price} · ` : ''}${hotels.map((h) => h.hotel_name).join(' · ')}</div>
+        ${price ? `<div class="tsub-price">${priceFromText(price)}</div>` : ''}
+        <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${h.nights})`).join(' · ')}</div>
         <div class="tgo">${t('btn_view')} →</div>
       </div>
     `;
@@ -267,10 +278,11 @@ function datePillHtml(start, end) {
 function multiSubtitle(tf) {
   const price = tariffMinPrice(tf);
   const hotels = tf.dates[0].hotels;
-  const parts = [];
-  if (price) parts.push(`${t('price_from')} $${price}`);
-  hotels.forEach((h) => parts.push(`${h.city}: ${h.hotel_name} (${h.nights})`));
-  return `<div class="pkg-subtitle">${parts.join(' · ')}</div>`;
+  const hotelsLine = hotels.map((h) => `${h.city}: ${h.hotel_name} (${h.nights})`).join(' · ');
+  return `
+    ${price ? `<div class="pkg-subtitle-price">${priceFromText(price)}</div>` : ''}
+    <div class="pkg-subtitle-hotels">${hotelsLine}</div>
+  `;
 }
 
 function extraServicesHtmlMulti(list) {
@@ -346,9 +358,20 @@ function extraServicesHtmlSeasonal(list) {
   `;
 }
 
+function seasonToggleHtml(selIdx, dateList) {
+  const isOctDec = Number(dateList[selIdx][0].split('.')[1]) >= 10;
+  return `
+    <div class="season-toggle">
+      <button type="button" class="season-toggle-btn ${!isOctDec ? 'active' : ''}" data-season="jun_sep">${t('season_jun_sep')}</button>
+      <button type="button" class="season-toggle-btn ${isOctDec ? 'active' : ''}" data-season="oct_dec">${t('season_oct_dec')}</button>
+    </div>
+  `;
+}
+
 function datePickerHtml(dateList, selIdx) {
   return `
     <div class="date-picker">
+      ${seasonToggleHtml(selIdx, dateList)}
       <div class="date-picker-head">${t('departure_dates_label')}</div>
       <div class="date-picker-sub">${t('choose_date_label')}</div>
       <div class="date-picker-grid">
@@ -378,7 +401,8 @@ function renderSeasonalDetail(tf, cardsEl) {
     <div class="col">
       <div class="pkg-card ${tf.theme}" data-tariff-id="${tf.id}">
         <div class="pkg-title-banner">${tf.name}</div>
-        <div class="pkg-subtitle">${t('price_from')} $${minPrice} · ${season.hotels.map((h) => `${h.city}: ${h.hotel_name} (${h.nights})`).join(' · ')}</div>
+        <div class="pkg-subtitle-price">${priceFromText(minPrice)}</div>
+        <div class="pkg-subtitle-hotels">${season.hotels.map((h) => `${h.city}: ${h.hotel_name} (${h.nights})`).join(' · ')}</div>
         <div class="days-badge">${season.duration.toUpperCase()}</div>
         ${hotelGalleryHtml(media, season.hotels)}
         ${mealGalleryHtml(media)}
@@ -397,6 +421,16 @@ function renderSeasonalDetail(tf, cardsEl) {
     btn.addEventListener('click', () => {
       seasonalSelection[tf.id] = Number(btn.dataset.dateIdx);
       renderSeasonalDetail(tf, cardsEl);
+    });
+  });
+  cardsEl.querySelectorAll('.season-toggle-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const wantOctDec = btn.dataset.season === 'oct_dec';
+      const match = dateList.findIndex((d) => (Number(d[0].split('.')[1]) >= 10) === wantOctDec);
+      if (match > -1) {
+        seasonalSelection[tf.id] = match;
+        renderSeasonalDetail(tf, cardsEl);
+      }
     });
   });
   wireMediaClicks(cardsEl, media);
@@ -451,29 +485,27 @@ export function renderFaq() {
   });
 }
 
+// Real business contacts, same source as the floating contact widget —
+// deliberately not sheet-driven, see config.js.
 export function renderContacts() {
   const grid = document.getElementById('contacts-grid');
-  if (!grid || !siteData) return;
-
-  const byKey = {};
-  siteData.contacts.forEach((row) => { byKey[row.key] = row; });
+  if (!grid) return;
 
   const rows = [
-    { key: 'phone', label: t('contact_phone'), icon: '📞' },
-    { key: 'address', label: t('contact_address'), icon: '📍' },
-    { key: 'hours', label: t('contact_hours'), icon: '🕐' },
-    { key: 'social', label: t('contact_social'), icon: '💬' },
+    { label: t('contact_phone'), icon: '📞', value: CONTACT_PHONES.join(' · '), href: `tel:${CONTACT_PHONES[0].replace(/[^\d+]/g, '')}` },
+    { label: t('contact_address'), icon: '📍', value: CONTACT_ADDRESS, href: CONTACT_MAPS_URL },
+    { label: t('contact_instagram'), icon: '📷', value: 'Instagram', href: CONTACT_INSTAGRAM_URL },
+    { label: t('contact_telegram'), icon: '✈️', value: 'Telegram', href: CONTACT_TELEGRAM_URL },
+    { label: t('contact_whatsapp'), icon: '💬', value: 'WhatsApp', href: CONTACT_WHATSAPP_URL },
   ];
 
-  grid.innerHTML = rows
-    .filter((r) => byKey[r.key])
-    .map((r) => `
-      <div class="contact-card">
-        <div class="ico">${r.icon}</div>
-        <div>
-          <b>${r.label}</b>
-          <span>${field(byKey[r.key], 'value') || byKey[r.key].value || ''}</span>
-        </div>
+  grid.innerHTML = rows.map((r) => `
+    <a class="contact-card" href="${r.href}" target="_blank" rel="noopener">
+      <div class="ico">${r.icon}</div>
+      <div>
+        <b>${r.label}</b>
+        <span>${r.value}</span>
       </div>
-    `).join('');
+    </a>
+  `).join('');
 }
