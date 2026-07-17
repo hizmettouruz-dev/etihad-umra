@@ -515,6 +515,52 @@
   letter-spacing: -1px;
   padding: 0 2px;
 }
+
+/* ================= Date picker (seasonal-tariff cards) ================= */
+.date-picker { display: flex; flex-direction: column; gap: 8px; }
+.date-picker-head {
+  text-align: center;
+  font-family: var(--fd);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  color: var(--ttxt, var(--text));
+}
+.date-picker-sub {
+  text-align: center;
+  font-family: var(--fb);
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--ttxt2, var(--text-muted));
+  margin-top: -6px;
+}
+.date-picker-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.date-picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--panel, var(--card-bg));
+  border: 1px solid var(--line, var(--border));
+  border-radius: 9px;
+  padding: 6px 4px;
+  font-family: var(--fd);
+  font-weight: 700;
+  font-size: 10.5px;
+  color: var(--ttxt, var(--text));
+  cursor: pointer;
+}
+.date-picker-item .arrow { color: var(--acc, var(--gold)); font-weight: 800; }
+.date-picker-item.active {
+  background: var(--c2, var(--amber));
+  border-color: transparent;
+  color: var(--onc2, #fff);
+}
+.date-picker-item.active .arrow { color: var(--onc2, #fff); }
 .pkg-placeholder-badge {
   align-self: center;
   font-family: var(--fd);
@@ -592,6 +638,15 @@
 }
 
 /* ================= Inline tariff-card details — copied 1:1 from reference's card sub-blocks ================= */
+.hotel-gallery-caption {
+  font-family: var(--fd);
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--acc, var(--gold));
+  text-align: center;
+}
 .tm-gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

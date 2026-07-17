@@ -19,28 +19,11 @@ export const GH_HERO_BASE = 'https://github.com/hizmettouruz-dev/etihad-umra/rel
 export const TELEGRAM_BOT_TOKEN = '8916790909:AAFIgc6Ng_8T-oNB11ZOg0fm5G-4iZNEIt0';
 export const TELEGRAM_CHAT_ID = '1739109071';
 
-// Ranges include row 1 (headers) — sheetsClient.js maps columns by header
-// name, so the client is table-order independent as long as header text matches.
+// Tariffs/hotels/media now live in tariffsData.js (real per-package data) —
+// only FAQ and Contacts are still sheet-driven.
 export const SHEET_RANGES = [
-  'Tariffs!A1:AZ200',
-  'TariffHotels!A1:Z500',
-  'Media!A1:Z500',
   'FAQ!A1:Z100',
   'Contacts!A1:E50',
-];
-
-// Generic photos/videos (cabin, food, train) shown in every tariff's gallery
-// alongside its own hotel media — not tied to one specific tariff_id, so they
-// live here instead of the Media sheet tab.
-export const GENERIC_MEDIA = [
-  { type: 'video', gh_asset_filename: 'cabin-business.mp4', label_ru: 'Салон бизнес-класса', label_uz: 'Biznes-klass saloni', label_tj: 'Салони бизнес-класс' },
-  { type: 'video', gh_asset_filename: 'cabin-economy.mp4', label_ru: 'Салон эконом-класса', label_uz: 'Ekonom-klass saloni', label_tj: 'Салони эконом-класс' },
-  { type: 'image', gh_asset_filename: 'cabin-1.jpg', label_ru: 'Салон самолёта', label_uz: 'Samolyot saloni', label_tj: 'Салони ҳавопаймо' },
-  { type: 'image', gh_asset_filename: 'cabin-2.webp', label_ru: 'Салон самолёта', label_uz: 'Samolyot saloni', label_tj: 'Салони ҳавопаймо' },
-  { type: 'image', gh_asset_filename: 'food-1.jpg', label_ru: 'Питание на борту', label_uz: 'Parvoz davomida ovqatlanish', label_tj: 'Хӯрокхӯрӣ дар парвоз' },
-  { type: 'image', gh_asset_filename: 'food-2.jpg', label_ru: 'Питание на борту', label_uz: 'Parvoz davomida ovqatlanish', label_tj: 'Хӯрокхӯрӣ дар парвоз' },
-  { type: 'image', gh_asset_filename: 'food-3.jpg', label_ru: 'Питание на борту', label_uz: 'Parvoz davomida ovqatlanish', label_tj: 'Хӯрокхӯрӣ дар парвоз' },
-  { type: 'image', gh_asset_filename: 'train.png', label_ru: 'Скоростной поезд Медина — Мекка', label_uz: 'Tezyurar poyezd Madina — Makka', label_tj: 'Қатораи тезрафтор Мадина — Макка' },
 ];
 
 // Real business contacts for the floating contact widget (deliberately not
@@ -49,6 +32,7 @@ export const GENERIC_MEDIA = [
 // should be updated there too whenever convenient).
 export const CONTACT_INSTAGRAM_URL = 'https://www.instagram.com/hizmet_premium';
 export const CONTACT_TELEGRAM_URL = 'https://t.me/premium_paketlari';
+export const CONTACT_WHATSAPP_URL = 'https://wa.me/998987001192';
 export const CONTACT_PHONES = ['+998 98 700 11 92', '+992 88 448 77 77', '+998 55 055 02 55'];
 export const CONTACT_ADDRESS = 'Нурафшон 51';
 export const CONTACT_MAPS_URL = 'https://share.google/IugqTlyDZ366RIvW1';

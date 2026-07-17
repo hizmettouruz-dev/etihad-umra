@@ -16,7 +16,8 @@ function rowsToObjects(rows) {
 }
 
 // Fetches every configured tab in a single HTTP round-trip and returns
-// { tariffs, tariffHotels, media, faq, contacts } — never cached, always fresh.
+// { faq, contacts } — never cached, always fresh. (Tariffs/hotels/media are
+// static now, see tariffsData.js — only FAQ/Contacts still live in Sheets.)
 export async function fetchSiteData() {
   const params = new URLSearchParams();
   SHEET_RANGES.forEach((r) => params.append('ranges', r));
@@ -31,12 +32,9 @@ export async function fetchSiteData() {
     throw new Error(`Sheets API ${res.status}: ${body.slice(0, 200)}`);
   }
   const json = await res.json();
-  const [tariffsRange, hotelsRange, mediaRange, faqRange, contactsRange] = json.valueRanges || [];
+  const [faqRange, contactsRange] = json.valueRanges || [];
 
   return {
-    tariffs: rowsToObjects(tariffsRange && tariffsRange.values),
-    tariffHotels: rowsToObjects(hotelsRange && hotelsRange.values),
-    media: rowsToObjects(mediaRange && mediaRange.values),
     faq: rowsToObjects(faqRange && faqRange.values),
     contacts: rowsToObjects(contactsRange && contactsRange.values),
   };

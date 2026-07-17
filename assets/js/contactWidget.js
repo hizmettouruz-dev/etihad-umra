@@ -1,4 +1,4 @@
-import { CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL } from './config.js';
+import { CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL } from './config.js';
 import { openLeadForm } from './leadForm.js';
 import { t } from './i18n.js';
 
@@ -18,6 +18,9 @@ export function renderContactWidget() {
     </a>
     <a class="contact-link" href="${CONTACT_TELEGRAM_URL}" target="_blank" rel="noopener">
       <span class="ico">✈️</span> ${t('contact_telegram')}
+    </a>
+    <a class="contact-link" href="${CONTACT_WHATSAPP_URL}" target="_blank" rel="noopener">
+      <span class="ico">💬</span> ${t('contact_whatsapp')}
     </a>
     ${CONTACT_PHONES.map((p) => `
       <a class="contact-link" href="${telHref(p)}">

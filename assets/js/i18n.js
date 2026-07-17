@@ -29,6 +29,9 @@ const DICT = {
   inc_guide: { ru: 'Гид', uz: 'Гид', tj: 'Роҳбалад' },
   inc_insurance: { ru: 'Медстраховка', uz: 'Тиббий суғурта', tj: 'Суғуртаи тиббӣ' },
   inc_zamzam: { ru: '5л воды Замзам', uz: '5л Замзам суви', tj: '5л оби Замзам' },
+  meal_gallery_label: { ru: 'Питание в пути', uz: "Yo'lda ovqatlanish", tj: 'Хӯрокхӯрӣ дар роҳ' },
+  departure_dates_label: { ru: 'Даты выезда', uz: "Jo'nash sanalari", tj: 'Санаҳои рафтан' },
+  choose_date_label: { ru: 'Выберите удобную дату', uz: 'Qulay sanani tanlang', tj: 'Санаи мувофиқро интихоб кунед' },
 
   faq_label: { ru: 'FAQ', uz: 'Савол-жавоб', tj: 'Саволу ҷавоб' },
   faq_title: { ru: 'Часто задаваемые вопросы', uz: 'Кўп бериладиган саволлар', tj: 'Саволҳои зуд-зуд додашаванда' },
@@ -41,6 +44,7 @@ const DICT = {
   contact_social: { ru: 'Мы в сети', uz: 'Ижтимоий тармоқлар', tj: 'Шабакаҳои иҷтимоӣ' },
   contact_instagram: { ru: 'Написать в Instagram', uz: 'Instagram orqali yozish', tj: 'Дар Instagram навиштан' },
   contact_telegram: { ru: 'Написать в Telegram', uz: 'Telegram orqali yozish', tj: 'Дар Telegram навиштан' },
+  contact_whatsapp: { ru: 'Написать в WhatsApp', uz: "WhatsApp orqali yozish", tj: 'Дар WhatsApp навиштан' },
   contact_widget_label: { ru: 'Связаться с нами', uz: 'Биз билан боғланинг', tj: 'Бо мо тамос гиред' },
 
   form_title: { ru: 'Оставить заявку', uz: 'Ариза қолдириш', tj: 'Дархост гузоштан' },
