@@ -206,6 +206,7 @@
   color: var(--ontitle, #fff);
   line-height: 1;
   text-align: center;
+  text-transform: uppercase;
 }
 .tile .tsub {
   font-family: var(--fd);

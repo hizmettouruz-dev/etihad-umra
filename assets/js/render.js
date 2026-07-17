@@ -1,17 +1,17 @@
-import { t, getLang } from './i18n.js';
-import { openMediaModal } from './mediaModal.js';
-import { openLeadForm } from './leadForm.js';
+import { t, getLang } from './i18n.js?v=4';
+import { openMediaModal } from './mediaModal.js?v=4';
+import { openLeadForm } from './leadForm.js?v=4';
 import {
   GH_PHOTO_BASE, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL,
   CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL,
-} from './config.js';
-import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js';
-import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js';
-import { TARIFFS } from './tariffsData.js';
+} from './config.js?v=4';
+import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js?v=4';
+import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=4';
+import { TARIFFS } from './tariffsData.js?v=4';
 import {
   iconPlane, iconHotel, iconMeal, iconPeople, iconLuggage, iconTrain,
   iconTicket, iconTransfer, iconVisa, iconGuide, iconMedical, iconWater,
-} from './icons.js';
+} from './icons.js?v=4';
 
 const INC_ICON_MAP = [
   [/aviabilet/i, iconTicket],
@@ -106,27 +106,87 @@ function tariffFirstHotels(tf) {
   return tf.mode === 'multi' ? tf.dates[0].hotels : tf.seasonal.jun_sep.hotels;
 }
 
+// Same-brand variants shown as one family tile that opens a variant-picker
+// sub-screen, matching the reference's family→variant→dates nesting.
+const GROUPS = {
+  HYATT: ['hyatt07', 'hyatt09'],
+  TAYSIR: ['taysir12', 'taysir14'],
+};
+
+function tariffTileHtml(tf) {
+  const price = tariffMinPrice(tf);
+  const hotels = tariffFirstHotels(tf);
+  return `
+    <div class="tile ${tf.theme}" data-tariff-id="${tf.id}" role="button" tabindex="0">
+      <div class="tname">${tf.name}</div>
+      <div class="tsub">${t('pkg_label')}</div>
+      ${price ? `<div class="tsub-price">${priceFromText(price)}</div>` : ''}
+      <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${h.nights})`).join(' · ')}</div>
+      <div class="tgo">${t('btn_view')} →</div>
+    </div>
+  `;
+}
+
+function groupTileHtml(groupName) {
+  const variantIds = GROUPS[groupName];
+  const variants = variantIds.map((id) => TARIFFS[id]);
+  const price = Math.min(...variants.map(tariffMinPrice).filter((p) => p !== null));
+  const hotels = tariffFirstHotels(variants[0]);
+  return `
+    <div class="tile ${variants[0].theme}" data-group="${groupName}" role="button" tabindex="0">
+      <div class="tname">${groupName}</div>
+      <div class="tsub">${t('pkg_label')}</div>
+      ${Number.isFinite(price) ? `<div class="tsub-price">${priceFromText(price)}</div>` : ''}
+      <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${h.nights})`).join(' · ')}</div>
+      <div class="tgo">${t('btn_view')} →</div>
+    </div>
+  `;
+}
+
 export function renderTariffs() {
   const grid = document.getElementById('tariffs-grid');
   if (!grid) return;
 
-  grid.innerHTML = Object.values(TARIFFS).map((tf) => {
-    const price = tariffMinPrice(tf);
-    const hotels = tariffFirstHotels(tf);
-    return `
-      <div class="tile ${tf.theme}" data-tariff-id="${tf.id}" role="button" tabindex="0">
-        <div class="tname">${tf.name}</div>
-        <div class="tsub">${t('pkg_label')}</div>
-        ${price ? `<div class="tsub-price">${priceFromText(price)}</div>` : ''}
-        <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${h.nights})`).join(' · ')}</div>
-        <div class="tgo">${t('btn_view')} →</div>
-      </div>
-    `;
-  }).join('');
+  const groupedIds = new Set(Object.values(GROUPS).flat());
+  const shownGroups = new Set();
+  const items = [];
+  Object.keys(TARIFFS).forEach((id) => {
+    if (!groupedIds.has(id)) {
+      items.push(tariffTileHtml(TARIFFS[id]));
+      return;
+    }
+    const groupName = Object.keys(GROUPS).find((g) => GROUPS[g].includes(id));
+    if (!shownGroups.has(groupName)) {
+      shownGroups.add(groupName);
+      items.push(groupTileHtml(groupName));
+    }
+  });
 
-  grid.querySelectorAll('.tile').forEach((tile) => {
+  grid.innerHTML = items.join('');
+
+  grid.querySelectorAll('.tile[data-group]').forEach((tile) => {
+    tile.addEventListener('click', () => openGroupVariants(tile.dataset.group));
+  });
+  grid.querySelectorAll('.tile[data-tariff-id]').forEach((tile) => {
     tile.addEventListener('click', () => openTariffDetail(tile.dataset.tariffId));
   });
+}
+
+function openGroupVariants(groupName) {
+  const cardsEl = document.getElementById('tariffDetailCards');
+  document.getElementById('tariffCrumb').innerHTML = `<b>«${groupName}» ${t('family_suffix')}</b>`;
+  document.getElementById('tariffsHead').hidden = true;
+  document.getElementById('tariffs-grid').hidden = true;
+  document.getElementById('tariffDetail').hidden = false;
+
+  cardsEl.className = 'tiles';
+  cardsEl.innerHTML = GROUPS[groupName].map((id) => tariffTileHtml(TARIFFS[id])).join('');
+  cardsEl.querySelectorAll('.tile[data-tariff-id]').forEach((tile) => {
+    tile.addEventListener('click', () => openTariffDetail(tile.dataset.tariffId, groupName));
+  });
+
+  navState = { type: 'variants', group: groupName };
+  document.getElementById('tariffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function buildMediaList(tf) {
@@ -437,7 +497,9 @@ function renderSeasonalDetail(tf, cardsEl) {
 
 // ---------------- shared open/close ----------------
 
-export function openTariffDetail(tariffId) {
+let navState = { type: 'tiles' };
+
+export function openTariffDetail(tariffId, fromGroup) {
   const tf = TARIFFS[tariffId];
   if (!tf) return;
 
@@ -447,16 +509,23 @@ export function openTariffDetail(tariffId) {
   document.getElementById('tariffDetail').hidden = false;
 
   const cardsEl = document.getElementById('tariffDetailCards');
+  cardsEl.className = 'detail-cards';
   if (tf.mode === 'multi') renderMultiDateDetail(tf, cardsEl);
   else renderSeasonalDetail(tf, cardsEl);
 
+  navState = fromGroup ? { type: 'detail', fromGroup } : { type: 'detail' };
   document.getElementById('tariffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 export function closeTariffDetail() {
+  if (navState.type === 'detail' && navState.fromGroup) {
+    openGroupVariants(navState.fromGroup);
+    return;
+  }
   document.getElementById('tariffsHead').hidden = false;
   document.getElementById('tariffs-grid').hidden = false;
   document.getElementById('tariffDetail').hidden = true;
+  navState = { type: 'tiles' };
 }
 
 // ================= FAQ / Contacts (still sheet-driven) =================

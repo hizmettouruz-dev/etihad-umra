@@ -1,4 +1,4 @@
-import { GH_VIDEO_BASE, GH_PHOTO_BASE } from './config.js';
+import { GH_VIDEO_BASE, GH_PHOTO_BASE } from './config.js?v=4';
 
 let items = [];
 let idx = 0;
