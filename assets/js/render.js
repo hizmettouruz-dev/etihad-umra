@@ -113,14 +113,22 @@ function airlineBoxHtml(tf) {
   if (!details && !tf.flight_route) return '';
   const dotIdx = details.indexOf('.');
   const airlineName = dotIdx > -1 ? details.slice(0, dotIdx) : details;
-  const rest = dotIdx > -1 ? details.slice(dotIdx + 1).trim() : '';
   return `
-    <div class="airline-box">
-      ${airlineName ? `<div class="airline-name"><span class="ico">${iconPlane()}</span>${airlineName}</div>` : ''}
-      ${tf.flight_route ? `<div class="airline-route">${tf.flight_route}</div>` : ''}
-      ${rest ? `<div class="airline-detail">${rest}</div>` : ''}
+    <div class="airline">
+      <span class="ico">${iconPlane()}</span>
+      <div>
+        ${airlineName ? `<div class="al-name">${airlineName}</div>` : ''}
+        ${tf.flight_route ? `<div class="al-route">${tf.flight_route}</div>` : ''}
+      </div>
     </div>
   `;
+}
+
+function flightDetailNoteHtml(tf) {
+  const details = field(tf, 'flight_details');
+  const dotIdx = details.indexOf('.');
+  const rest = dotIdx > -1 ? details.slice(dotIdx + 1).trim() : '';
+  return rest ? `<div class="note">${rest}</div>` : '';
 }
 
 function subtitleHtml(tf, hotels, compact = false) {
@@ -136,21 +144,22 @@ function pricesHtml(tf) {
   const tiers = PRICE_TIERS.filter(([key]) => tf[key]);
   if (!tiers.length) return '';
   return `
-    <div class="tm-prices">${tiers.map(([key, n]) => `
-      <div class="tm-price-row"><span class="pl"><span class="ico">${iconPeople()}</span><span>${n} ${t('per_person')}</span></span><b>$${tf[key]}</b></div>
+    <div class="prices">${tiers.map(([key, n]) => `
+      <div class="price-row"><div class="pl"><span class="ico">${iconPeople()}</span><span>${n} ${t('per_person')}</span></div><div class="price-tag">$${tf[key]}</div></div>
     `).join('')}</div>
-    <div class="price-note">${t('price_note')}</div>
+    <div class="note">${t('price_note')}</div>
   `;
 }
 
 function hotelsHtml(hotels) {
   if (!hotels.length) return '';
   return hotels.map((h) => `
-    <div class="tm-hotel-row">
-      <span class="ico">${iconHotel()}</span>
-      <div class="hotel-body">
-        <div class="hotel-name">${h.hotel_name} <span class="hotel-meta">· ${h.city}</span></div>
-        <div class="hotel-meta"><span class="ico-inline">${iconMeal()}</span>${h.nights ? h.nights + ' · ' : ''}${field(h, 'meal_plan')}</div>
+    <div class="hotel">
+      <div class="ic">${iconHotel()}</div>
+      <div class="h-body">
+        <div class="h-city">${(h.city || '').toUpperCase()}${h.nights ? ` <b>— ${h.nights.toUpperCase()}</b>` : ''}</div>
+        <div class="h-name">${h.hotel_name}</div>
+        <div class="h-meal"><span class="ico">${iconMeal()}</span>${field(h, 'meal_plan')}</div>
       </div>
     </div>
   `).join('');
@@ -160,12 +169,12 @@ function extraServicesHtml(hotels) {
   const rows = hotels.filter((h) => field(h, 'extra_badge_label'));
   if (!rows.length) return '';
   return `
-    <div class="section-subhead">${t('extra_services_label')}</div>
+    <div class="addon-head">${t('extra_services_label')}</div>
     ${rows.map((h) => `
-      <div class="extra-service-row">
+      <div class="extra">
         <span class="ico">${iconLuggage()}</span>
         <span>${field(h, 'extra_badge_label')}</span>
-        ${h.extra_price ? `<b>$${h.extra_price}</b>` : ''}
+        ${h.extra_price ? `<b class="addon-pr">$${h.extra_price}</b>` : ''}
       </div>
     `).join('')}
   `;
@@ -174,7 +183,7 @@ function extraServicesHtml(hotels) {
 function placesSectionHtml() {
   return `
     <div class="places-section">
-      <div class="section-subhead">${t('places_label')}</div>
+      <div class="inc-head">${t('places_label')}</div>
       <div class="places-line"><b>${t('places_medina_label')}:</b> ${MEDINA_PLACES.join(', ')}</div>
       <div class="places-line"><b>${t('places_makka_label')}:</b> ${MAKKA_PLACES.join(', ')}</div>
     </div>
@@ -188,10 +197,10 @@ function incGridHtml(tf) {
     const match = INC_ICON_MAP.find(([re]) => re.test(raw));
     const icon = match ? match[1]() : '';
     const label = match ? t(match[2]) : raw;
-    return `<div class="inc-item"><div class="inc-ico">${icon}</div><div class="inc-label">${label}</div></div>`;
+    return `<div class="inc"><div class="ib">${icon}</div><small>${label}</small></div>`;
   }).join('');
   return `
-    <div class="section-subhead">${t('inclusions_label')}</div>
+    <div class="inc-head">${t('inclusions_label')}</div>
     <div class="inc-grid">${items}</div>
   `;
 }
@@ -260,13 +269,14 @@ function renderTariffDetail(tariffId) {
   const dateOptions = datesForDepartureDay(tf.departure_day_ru);
   const subtitle = subtitleHtml(tf, hotels);
   const restHtml = `
-    <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
+    <div class="days-badge">${duration}${departure ? ' · ' + departure : ''}</div>
     ${photosGalleryHtml(media)}
     ${airlineBoxHtml(tf)}
+    ${flightDetailNoteHtml(tf)}
     ${videoLinkHtml(media)}
     ${hotelsHtml(hotels)}
     ${pricesHtml(tf)}
-    <div class="transfer-banner"><span class="ico">${iconTrain()}</span>${t('transfer_train_label')}</div>
+    <div class="train"><span class="ico">${iconTrain()}</span>${t('transfer_train_label')}</div>
     ${trainPhotoLinkHtml(media)}
     ${extraServicesHtml(hotels)}
     ${placesSectionHtml()}
@@ -275,12 +285,14 @@ function renderTariffDetail(tariffId) {
 
   const cardsToRender = dateOptions.length ? dateOptions : [null];
   cardsEl.innerHTML = cardsToRender.map((dates) => `
-    <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
-      <div class="pkg-title-banner">${name}</div>
-      ${subtitle}
-      ${dates ? datePillHtml(dates) : ''}
-      ${restHtml}
-      <div class="pkg-cta" data-role="request" data-date-range="${dates ? `${dates[0]} – ${dates[1]}` : ''}">${t('btn_book_dates')}</div>
+    <div class="col">
+      <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
+        <div class="pkg-title-banner">${name}</div>
+        ${subtitle}
+        ${dates ? datePillHtml(dates) : ''}
+        ${restHtml}
+        <div class="pkg-cta" data-role="request" data-date-range="${dates ? `${dates[0]} – ${dates[1]}` : ''}">${t('btn_book_dates')}</div>
+      </div>
     </div>
   `).join('');
 
