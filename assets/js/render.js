@@ -4,14 +4,18 @@ import { openLeadForm } from './leadForm.js';
 import { GH_PHOTO_BASE, GENERIC_MEDIA } from './config.js';
 import { datesForDepartureDay } from './departureDates.js';
 import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js';
+import {
+  iconPlane, iconHotel, iconMeal, iconPeople, iconLuggage, iconTrain,
+  iconTicket, iconTransfer, iconVisa, iconGuide, iconMedical, iconWater,
+} from './icons.js';
 
 const INC_ICON_MAP = [
-  [/перел/i, '✈️', 'inc_flight'],
-  [/трансфер/i, '🚐', 'inc_transfer'],
-  [/виза/i, '🛂', 'inc_visa'],
-  [/гид/i, '🧭', 'inc_guide'],
-  [/медстрахов/i, '➕', 'inc_insurance'],
-  [/замзам/i, '💧', 'inc_zamzam'],
+  [/перел/i, iconTicket, 'inc_flight'],
+  [/трансфер/i, iconTransfer, 'inc_transfer'],
+  [/виза/i, iconVisa, 'inc_visa'],
+  [/гид/i, iconGuide, 'inc_guide'],
+  [/медстрахов/i, iconMedical, 'inc_insurance'],
+  [/замзам/i, iconWater, 'inc_zamzam'],
 ];
 
 // In-memory only — never persisted, so a language switch or re-render never
@@ -89,14 +93,19 @@ function photosGalleryHtml(media) {
   }).join('')}</div>`;
 }
 
-function videoButtonsHtml(media) {
+function videoLinkHtml(media) {
   const videos = media.filter((m) => m.type === 'video');
   if (!videos.length) return '';
-  return videos.map((m) => {
-    const idx = media.indexOf(m);
-    const label = m[`label_${getLang()}`] || m.label_ru || '';
-    return `<div class="watch-video-btn" data-media-idx="${idx}">${t('btn_watch_video')}${label ? ' — ' + label : ''}</div>`;
-  }).join('');
+  const firstIdx = media.indexOf(videos[0]);
+  const label = videos.length > 1 ? `${t('btn_watch_video')} (${videos.length})` : t('btn_watch_video');
+  return `<div class="media-link" data-media-idx="${firstIdx}">${label}</div>`;
+}
+
+function trainPhotoLinkHtml(media) {
+  const trainPhoto = media.find((m) => m.gh_asset_filename === 'train.png');
+  if (!trainPhoto) return '';
+  const idx = media.indexOf(trainPhoto);
+  return `<div class="media-link" data-media-idx="${idx}">${t('btn_watch_photo')}</div>`;
 }
 
 function airlineBoxHtml(tf) {
@@ -107,19 +116,20 @@ function airlineBoxHtml(tf) {
   const rest = dotIdx > -1 ? details.slice(dotIdx + 1).trim() : '';
   return `
     <div class="airline-box">
-      ${airlineName ? `<div class="airline-name">✈️ ${airlineName}</div>` : ''}
+      ${airlineName ? `<div class="airline-name"><span class="ico">${iconPlane()}</span>${airlineName}</div>` : ''}
       ${tf.flight_route ? `<div class="airline-route">${tf.flight_route}</div>` : ''}
       ${rest ? `<div class="airline-detail">${rest}</div>` : ''}
     </div>
   `;
 }
 
-function subtitleHtml(tf, hotels) {
+function subtitleHtml(tf, hotels, compact = false) {
   const price = tf.price_quad || tf.price_triple || tf.price_double || tf.price_single;
   const parts = [];
   if (price) parts.push(`${t('price_from')} $${price}`);
-  hotels.forEach((h) => parts.push(`${h.city}: ${h.hotel_name}${h.nights ? ' (' + h.nights + ')' : ''}`));
-  return parts.length ? `<div class="pkg-subtitle">${parts.join(' · ')}</div>` : '';
+  hotels.forEach((h) => parts.push(compact ? h.hotel_name : `${h.city}: ${h.hotel_name}${h.nights ? ' (' + h.nights + ')' : ''}`));
+  if (!parts.length) return '';
+  return `<div class="${compact ? 'tsub-info' : 'pkg-subtitle'}">${parts.join(' · ')}</div>`;
 }
 
 function pricesHtml(tf) {
@@ -127,7 +137,7 @@ function pricesHtml(tf) {
   if (!tiers.length) return '';
   return `
     <div class="tm-prices">${tiers.map(([key, n]) => `
-      <div class="tm-price-row"><span>${n} ${t('per_person')}</span><b>$${tf[key]}</b></div>
+      <div class="tm-price-row"><span class="pl"><span class="ico">${iconPeople()}</span><span>${n} ${t('per_person')}</span></span><b>$${tf[key]}</b></div>
     `).join('')}</div>
     <div class="price-note">${t('price_note')}</div>
   `;
@@ -137,8 +147,11 @@ function hotelsHtml(hotels) {
   if (!hotels.length) return '';
   return hotels.map((h) => `
     <div class="tm-hotel-row">
-      <div class="hotel-name">${h.hotel_name} <span class="hotel-meta">· ${h.city}</span></div>
-      <div class="hotel-meta">${h.nights ? h.nights + ' · ' : ''}${field(h, 'meal_plan')}</div>
+      <span class="ico">${iconHotel()}</span>
+      <div class="hotel-body">
+        <div class="hotel-name">${h.hotel_name} <span class="hotel-meta">· ${h.city}</span></div>
+        <div class="hotel-meta"><span class="ico-inline">${iconMeal()}</span>${h.nights ? h.nights + ' · ' : ''}${field(h, 'meal_plan')}</div>
+      </div>
     </div>
   `).join('');
 }
@@ -150,6 +163,7 @@ function extraServicesHtml(hotels) {
     <div class="section-subhead">${t('extra_services_label')}</div>
     ${rows.map((h) => `
       <div class="extra-service-row">
+        <span class="ico">${iconLuggage()}</span>
         <span>${field(h, 'extra_badge_label')}</span>
         ${h.extra_price ? `<b>$${h.extra_price}</b>` : ''}
       </div>
@@ -161,10 +175,8 @@ function placesSectionHtml() {
   return `
     <div class="places-section">
       <div class="section-subhead">${t('places_label')}</div>
-      <div class="places-city-label">${t('places_medina_label')}</div>
-      <ul class="tm-checklist">${MEDINA_PLACES.map((p) => `<li>${p}</li>`).join('')}</ul>
-      <div class="places-city-label">${t('places_makka_label')}</div>
-      <ul class="tm-checklist">${MAKKA_PLACES.map((p) => `<li>${p}</li>`).join('')}</ul>
+      <div class="places-line"><b>${t('places_medina_label')}:</b> ${MEDINA_PLACES.join(', ')}</div>
+      <div class="places-line"><b>${t('places_makka_label')}:</b> ${MAKKA_PLACES.join(', ')}</div>
     </div>
   `;
 }
@@ -174,7 +186,7 @@ function incGridHtml(tf) {
   if (!inclusionsRaw.length) return '';
   const items = inclusionsRaw.map((raw) => {
     const match = INC_ICON_MAP.find(([re]) => re.test(raw));
-    const icon = match ? match[1] : '✅';
+    const icon = match ? match[1]() : '';
     const label = match ? t(match[2]) : raw;
     return `<div class="inc-item"><div class="inc-ico">${icon}</div><div class="inc-label">${label}</div></div>`;
   }).join('');
@@ -198,10 +210,12 @@ export function renderTariffs() {
     const isPlaceholder = tf.is_placeholder === 'TRUE';
     const name = field(tf, 'name');
     const theme = tf.theme || 't-gold';
+    const hotels = siteData.tariffHotels.filter((r) => r.tariff_id === tf.id);
     return `
       <div class="tile ${theme}" data-tariff-id="${tf.id}" ${isPlaceholder ? '' : 'role="button" tabindex="0"'}>
         <div class="tname">${name}</div>
         <div class="tsub">${t('pkg_label')}</div>
+        ${isPlaceholder ? '' : subtitleHtml(tf, hotels, true)}
         <div class="tgo">${isPlaceholder ? t('coming_soon') : t('btn_view') + ' →'}</div>
       </div>
     `;
@@ -243,21 +257,17 @@ function renderTariffDetail(tariffId) {
     ...siteData.media.filter((r) => r.tariff_id === tf.id).sort((a, b) => Number(a.order || 0) - Number(b.order || 0)),
     ...GENERIC_MEDIA,
   ];
-  const desc = field(tf, 'short_desc');
   const dateOptions = datesForDepartureDay(tf.departure_day_ru);
   const subtitle = subtitleHtml(tf, hotels);
-  const bodyHtml = `
-    ${subtitle}
-    ${desc ? `<div class="pkg-desc">${desc}</div>` : ''}
-  `;
   const restHtml = `
     <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
     ${photosGalleryHtml(media)}
-    ${videoButtonsHtml(media)}
     ${airlineBoxHtml(tf)}
+    ${videoLinkHtml(media)}
     ${hotelsHtml(hotels)}
     ${pricesHtml(tf)}
-    <div class="transfer-banner">🚄 ${t('transfer_train_label')}</div>
+    <div class="transfer-banner"><span class="ico">${iconTrain()}</span>${t('transfer_train_label')}</div>
+    ${trainPhotoLinkHtml(media)}
     ${extraServicesHtml(hotels)}
     ${placesSectionHtml()}
     ${incGridHtml(tf)}
@@ -267,14 +277,14 @@ function renderTariffDetail(tariffId) {
   cardsEl.innerHTML = cardsToRender.map((dates) => `
     <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
       <div class="pkg-title-banner">${name}</div>
-      ${bodyHtml}
+      ${subtitle}
       ${dates ? datePillHtml(dates) : ''}
       ${restHtml}
       <div class="pkg-cta" data-role="request" data-date-range="${dates ? `${dates[0]} – ${dates[1]}` : ''}">${t('btn_book_dates')}</div>
     </div>
   `).join('');
 
-  cardsEl.querySelectorAll('.tm-gallery-item, .watch-video-btn').forEach((node) => {
+  cardsEl.querySelectorAll('.tm-gallery-item, .media-link').forEach((node) => {
     node.addEventListener('click', () => {
       const items = media.map((m) => ({
         type: m.type,

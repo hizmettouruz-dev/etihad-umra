@@ -215,6 +215,16 @@
   color: var(--ontitle, #fff);
   opacity: 0.9;
 }
+.tile .tsub-info {
+  font-family: var(--fb);
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--ontitle, #fff);
+  opacity: 0.85;
+  text-align: center;
+  line-height: 1.4;
+  max-width: 90%;
+}
 .tile .tgo {
   margin-top: 6px;
   font-family: var(--fb);
@@ -317,38 +327,39 @@
   line-height: 1.5;
 }
 
-.watch-video-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  border-radius: 13px;
-  background: var(--c1, var(--dark));
-  color: var(--ontitle, #fff);
-  font-family: var(--fd);
-  font-weight: 800;
-  font-size: 12.5px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
+.media-link {
   text-align: center;
+  font-family: var(--fb);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--acc, var(--gold));
+  text-decoration: underline;
   cursor: pointer;
-  box-shadow: 0 3px 0 var(--c1d, #000);
+  margin-top: -3px;
 }
-.watch-video-btn:hover { transform: translateY(-2px); }
+.media-link:hover { opacity: 0.8; }
+
+.ico { display: inline-flex; align-items: center; justify-content: center; color: var(--acc, var(--gold)); }
+.ico svg { display: block; }
+.ico-inline { display: inline-flex; vertical-align: -2px; margin-right: 4px; color: var(--acc, var(--gold)); }
+.ico-inline svg { display: block; }
 
 .airline-box {
   background: var(--panel, var(--card-bg));
   border: 1px solid var(--line, var(--border));
   border-radius: 12px;
-  padding: 10px 12px;
+  padding: 9px 12px;
   text-align: center;
 }
 .airline-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-family: var(--fd);
   font-weight: 700;
   color: var(--acc, var(--gold));
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0.2px;
   text-transform: uppercase;
 }
@@ -382,13 +393,17 @@
   color: var(--ontitle, #fff);
   border-radius: 11px;
   padding: 10px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-family: var(--fd);
   font-weight: 800;
   letter-spacing: 0.3px;
   font-size: 12.5px;
   text-transform: uppercase;
 }
+.transfer-banner .ico { color: var(--ontitle, #fff); }
 
 .section-subhead {
   text-align: center;
@@ -425,13 +440,18 @@
   white-space: nowrap;
 }
 
-.places-section { display: flex; flex-direction: column; gap: 8px; }
-.places-city-label {
+.places-section { display: flex; flex-direction: column; gap: 4px; }
+.places-line {
+  font-family: var(--fb);
+  font-weight: 500;
+  font-size: 10.5px;
+  color: var(--ttxt2, var(--text-muted));
+  line-height: 1.5;
+}
+.places-line b {
   font-family: var(--fd);
   font-weight: 700;
-  font-size: 12px;
   color: var(--ttxt, var(--text));
-  margin-top: 2px;
 }
 
 .inc-grid {
@@ -441,14 +461,15 @@
 }
 .inc-item { text-align: center; }
 .inc-ico {
-  width: 30px; height: 30px;
+  width: 28px; height: 28px;
   margin: 0 auto 4px;
   border-radius: 8px;
   background: var(--panel, var(--card-bg));
   border: 1px solid var(--line, var(--border));
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
+  color: var(--acc, var(--gold));
 }
+.inc-ico svg { display: block; }
 .inc-label {
   font-family: var(--fb);
   font-weight: 600;
@@ -628,6 +649,7 @@
   border-radius: 11px;
   font-weight: 700;
 }
+.tm-price-row .pl { display: flex; align-items: center; gap: 6px; }
 .tm-price-row b {
   font-family: var(--fd);
   font-weight: 800;
@@ -643,9 +665,14 @@
   border: 1px solid var(--line, var(--border));
   border-radius: 12px;
   padding: 8px 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
 }
+.tm-hotel-row .ico { flex: none; margin-top: 1px; }
+.tm-hotel-row .hotel-body { flex: 1; min-width: 0; }
 .tm-hotel-row .hotel-name { font-weight: 800; color: var(--acc, var(--dark)); font-family: var(--fd); text-transform: uppercase; font-size: 0.85em; }
-.tm-hotel-row .hotel-meta { color: var(--ttxt2, var(--text-muted)); font-size: 0.85em; font-weight: 600; }
+.tm-hotel-row .hotel-meta { color: var(--ttxt2, var(--text-muted)); font-size: 0.85em; font-weight: 600; display: flex; align-items: center; margin-top: 2px; }
 
 .tm-checklist { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
 .tm-checklist li {

@@ -22,6 +22,7 @@ const DICT = {
   inclusions_label: { ru: 'В стоимость включено', uz: 'Нархга киритилган', tj: 'Дар нарх дохил аст' },
   extra_services_label: { ru: 'Дополнительные услуги', uz: 'Қўшимча хизматлар', tj: 'Хизматрасониҳои иловагӣ' },
   btn_watch_video: { ru: '▶ Смотреть видео', uz: "▶ Videoni ko'rish", tj: '▶ Дидани видео' },
+  btn_watch_photo: { ru: '📷 Смотреть фото', uz: "📷 Rasmni ko'rish", tj: '📷 Дидани расм' },
   inc_flight: { ru: 'Перелёт', uz: 'Парвоз', tj: 'Парвоз' },
   inc_transfer: { ru: 'Трансфер', uz: 'Трансфер', tj: 'Интиқол' },
   inc_visa: { ru: 'Виза', uz: 'Виза', tj: 'Виза' },
