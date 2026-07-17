@@ -337,7 +337,8 @@ function renderMultiDateDetail(tf, cardsEl) {
 
 // ---------------- seasonal mode (+ date picker) ----------------
 
-const seasonalSelection = {};
+const seasonalSelection = {}; // tf.id -> chosen date index
+const seasonalSeasonOverride = {}; // tf.id -> 'jun_sep' | 'oct_dec' (explicit toggle click wins over the date-derived season)
 
 function extraServicesHtmlSeasonal(list) {
   if (!list.length) return '';
@@ -358,20 +359,19 @@ function extraServicesHtmlSeasonal(list) {
   `;
 }
 
-function seasonToggleHtml(selIdx, dateList) {
-  const isOctDec = Number(dateList[selIdx][0].split('.')[1]) >= 10;
+function seasonToggleHtml(activeSeason) {
   return `
     <div class="season-toggle">
-      <button type="button" class="season-toggle-btn ${!isOctDec ? 'active' : ''}" data-season="jun_sep">${t('season_jun_sep')}</button>
-      <button type="button" class="season-toggle-btn ${isOctDec ? 'active' : ''}" data-season="oct_dec">${t('season_oct_dec')}</button>
+      <button type="button" class="season-toggle-btn ${activeSeason === 'jun_sep' ? 'active' : ''}" data-season="jun_sep">${t('season_jun_sep')}</button>
+      <button type="button" class="season-toggle-btn ${activeSeason === 'oct_dec' ? 'active' : ''}" data-season="oct_dec">${t('season_oct_dec')}</button>
     </div>
   `;
 }
 
-function datePickerHtml(dateList, selIdx) {
+function datePickerHtml(dateList, selIdx, activeSeason) {
   return `
     <div class="date-picker">
-      ${seasonToggleHtml(selIdx, dateList)}
+      ${seasonToggleHtml(activeSeason)}
       <div class="date-picker-head">${t('departure_dates_label')}</div>
       <div class="date-picker-sub">${t('choose_date_label')}</div>
       <div class="date-picker-grid">
@@ -389,8 +389,9 @@ function renderSeasonalDetail(tf, cardsEl) {
   const dateList = tf.seasonal.jun_sep.weekday === 'Payshanba' ? THU_DATES_2026 : SAT_DATES_2026;
   const selIdx = seasonalSelection[tf.id] ?? 0;
   const selDate = dateList[selIdx];
-  const isOctDec = Number(selDate[0].split('.')[1]) >= 10;
-  const season = isOctDec ? tf.seasonal.oct_dec : tf.seasonal.jun_sep;
+  const derivedSeason = Number(selDate[0].split('.')[1]) >= 10 ? 'oct_dec' : 'jun_sep';
+  const activeSeason = seasonalSeasonOverride[tf.id] || derivedSeason;
+  const season = activeSeason === 'oct_dec' ? tf.seasonal.oct_dec : tf.seasonal.jun_sep;
   const media = buildMediaList(tf);
   const priceEntries = ['quad', 'trpl', 'dbl', 'sngl']
     .filter((k) => season.prices[k])
@@ -411,7 +412,7 @@ function renderSeasonalDetail(tf, cardsEl) {
         ${pricesHtml(priceEntries)}
         ${extraServicesHtmlSeasonal(tf.seasonal.extra_services || [])}
         ${placesSectionHtml()}
-        ${datePickerHtml(dateList, selIdx)}
+        ${datePickerHtml(dateList, selIdx, activeSeason)}
         <div class="pkg-cta" data-role="request" data-date-range="${selDate[0]} – ${selDate[1]}">${t('btn_book_dates')}</div>
       </div>
     </div>
@@ -420,17 +421,14 @@ function renderSeasonalDetail(tf, cardsEl) {
   cardsEl.querySelectorAll('.date-picker-item').forEach((btn) => {
     btn.addEventListener('click', () => {
       seasonalSelection[tf.id] = Number(btn.dataset.dateIdx);
+      delete seasonalSeasonOverride[tf.id]; // picking a specific date lets the season follow it again
       renderSeasonalDetail(tf, cardsEl);
     });
   });
   cardsEl.querySelectorAll('.season-toggle-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const wantOctDec = btn.dataset.season === 'oct_dec';
-      const match = dateList.findIndex((d) => (Number(d[0].split('.')[1]) >= 10) === wantOctDec);
-      if (match > -1) {
-        seasonalSelection[tf.id] = match;
-        renderSeasonalDetail(tf, cardsEl);
-      }
+      seasonalSeasonOverride[tf.id] = btn.dataset.season;
+      renderSeasonalDetail(tf, cardsEl);
     });
   });
   wireMediaClicks(cardsEl, media);
