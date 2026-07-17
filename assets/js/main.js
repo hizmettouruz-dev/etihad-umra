@@ -1,9 +1,9 @@
-import { initI18n, applyStaticStrings } from './i18n.js?v=5';
-import { fetchSiteData } from './sheetsClient.js?v=5';
-import { setSiteData, renderTariffs, renderFaq, renderContacts, renderSkeletons, renderError, closeTariffDetail } from './render.js?v=5';
-import { initMediaModal } from './mediaModal.js?v=5';
-import { initLeadForm } from './leadForm.js?v=5';
-import { initContactWidget, renderContactWidget } from './contactWidget.js?v=5';
+import { initI18n, applyStaticStrings } from './i18n.js?v=6';
+import { fetchSiteData } from './sheetsClient.js?v=6';
+import { setSiteData, renderTariffs, refreshTariffView, renderFaq, renderContacts, renderSkeletons, renderError, closeTariffDetail } from './render.js?v=6';
+import { initMediaModal } from './mediaModal.js?v=6';
+import { initLeadForm } from './leadForm.js?v=6';
+import { initContactWidget, renderContactWidget } from './contactWidget.js?v=6';
 
 function initThemeToggle() {
   const KEY = 'theme';
@@ -42,9 +42,10 @@ function bootstrap() {
   renderTariffs(); // static data — renders instantly, no network wait
 
   document.addEventListener('langchange', () => {
-    renderTariffs();
+    refreshTariffView();
     // FAQ/Contacts data already fetched — re-render from memory, no new network request.
-    import('./render.js').then((m) => { m.renderFaq(); m.renderContacts(); });
+    renderFaq();
+    renderContacts();
     renderContactWidget();
   });
 

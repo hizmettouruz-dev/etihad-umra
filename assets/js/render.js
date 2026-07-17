@@ -1,17 +1,17 @@
-import { t, getLang } from './i18n.js?v=5';
-import { openMediaModal } from './mediaModal.js?v=5';
-import { openLeadForm } from './leadForm.js?v=5';
+import { t, getLang } from './i18n.js?v=6';
+import { openMediaModal } from './mediaModal.js?v=6';
+import { openLeadForm } from './leadForm.js?v=6';
 import {
   GH_PHOTO_BASE, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL,
   CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL,
-} from './config.js?v=5';
-import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js?v=5';
-import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=5';
-import { TARIFFS } from './tariffsData.js?v=5';
+} from './config.js?v=6';
+import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js?v=6';
+import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=6';
+import { TARIFFS } from './tariffsData.js?v=6';
 import {
   iconPlane, iconHotel, iconMeal, iconPeople, iconLuggage, iconTrain,
   iconTicket, iconTransfer, iconVisa, iconGuide, iconMedical, iconWater,
-} from './icons.js?v=5';
+} from './icons.js?v=6';
 
 const INC_ICON_MAP = [
   [/aviabilet/i, iconTicket],
@@ -216,7 +216,7 @@ export function renderTariffs() {
   });
 }
 
-function openGroupVariants(groupName) {
+function openGroupVariants(groupName, noScroll) {
   const cardsEl = document.getElementById('tariffDetailCards');
   document.getElementById('tariffCrumb').innerHTML = `<b>«${groupName}» ${t('family_suffix')}</b>`;
   document.getElementById('tariffsHead').hidden = true;
@@ -230,7 +230,7 @@ function openGroupVariants(groupName) {
   });
 
   navState = { type: 'variants', group: groupName };
-  document.getElementById('tariffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (!noScroll) document.getElementById('tariffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function buildMediaList(tf) {
@@ -543,7 +543,7 @@ function renderSeasonalDetail(tf, cardsEl) {
 
 let navState = { type: 'tiles' };
 
-export function openTariffDetail(tariffId, fromGroup) {
+export function openTariffDetail(tariffId, fromGroup, noScroll) {
   const tf = TARIFFS[tariffId];
   if (!tf) return;
 
@@ -557,8 +557,8 @@ export function openTariffDetail(tariffId, fromGroup) {
   if (tf.mode === 'multi') renderMultiDateDetail(tf, cardsEl);
   else renderSeasonalDetail(tf, cardsEl);
 
-  navState = fromGroup ? { type: 'detail', fromGroup } : { type: 'detail' };
-  document.getElementById('tariffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  navState = { type: 'detail', tariffId, fromGroup };
+  if (!noScroll) document.getElementById('tariffDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 export function closeTariffDetail() {
@@ -570,6 +570,18 @@ export function closeTariffDetail() {
   document.getElementById('tariffs-grid').hidden = false;
   document.getElementById('tariffDetail').hidden = true;
   navState = { type: 'tiles' };
+}
+
+// Re-render whatever tariff screen (tiles/variants/detail) is currently open,
+// in place, without changing navigation state or scrolling — used when the
+// language changes so in-progress navigation isn't lost.
+export function refreshTariffView() {
+  renderTariffs();
+  if (navState.type === 'variants') {
+    openGroupVariants(navState.group, true);
+  } else if (navState.type === 'detail') {
+    openTariffDetail(navState.tariffId, navState.fromGroup, true);
+  }
 }
 
 // ================= FAQ / Contacts (still sheet-driven) =================
