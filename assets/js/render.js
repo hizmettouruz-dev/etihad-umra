@@ -3,6 +3,16 @@ import { openMediaModal } from './mediaModal.js';
 import { openLeadForm } from './leadForm.js';
 import { GH_PHOTO_BASE, GENERIC_MEDIA } from './config.js';
 import { datesForDepartureDay } from './departureDates.js';
+import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js';
+
+const INC_ICON_MAP = [
+  [/перел/i, '✈️', 'inc_flight'],
+  [/трансфер/i, '🚐', 'inc_transfer'],
+  [/виза/i, '🛂', 'inc_visa'],
+  [/гид/i, '🧭', 'inc_guide'],
+  [/медстрахов/i, '➕', 'inc_insurance'],
+  [/замзам/i, '💧', 'inc_zamzam'],
+];
 
 // In-memory only — never persisted, so a language switch or re-render never
 // shows stale data; it just re-projects the same freshly-fetched objects.
@@ -66,23 +76,61 @@ export function renderAll() {
 
 const PRICE_TIERS = [['price_single', 1], ['price_double', 2], ['price_triple', 3], ['price_quad', 4]];
 
-function galleryHtml(media) {
-  if (!media.length) return '';
-  return `<div class="tm-gallery">${media.slice(0, 6).map((m, i) => `
-    <div class="tm-gallery-item" data-media-idx="${i}">
-      ${m.type === 'image'
-        ? `<img loading="lazy" alt="${m[`label_${getLang()}`] || ''}" src="${GH_PHOTO_BASE}${m.gh_asset_filename}">`
-        : `<div class="play-badge">▶</div>`}
+function photosGalleryHtml(media) {
+  const photos = media.filter((m) => m.type === 'image');
+  if (!photos.length) return '';
+  return `<div class="tm-gallery">${photos.map((m) => {
+    const idx = media.indexOf(m);
+    return `
+      <div class="tm-gallery-item" data-media-idx="${idx}">
+        <img loading="lazy" alt="${m[`label_${getLang()}`] || ''}" src="${GH_PHOTO_BASE}${m.gh_asset_filename}">
+      </div>
+    `;
+  }).join('')}</div>`;
+}
+
+function videoButtonsHtml(media) {
+  const videos = media.filter((m) => m.type === 'video');
+  if (!videos.length) return '';
+  return videos.map((m) => {
+    const idx = media.indexOf(m);
+    const label = m[`label_${getLang()}`] || m.label_ru || '';
+    return `<div class="watch-video-btn" data-media-idx="${idx}">${t('btn_watch_video')}${label ? ' — ' + label : ''}</div>`;
+  }).join('');
+}
+
+function airlineBoxHtml(tf) {
+  const details = field(tf, 'flight_details');
+  if (!details && !tf.flight_route) return '';
+  const dotIdx = details.indexOf('.');
+  const airlineName = dotIdx > -1 ? details.slice(0, dotIdx) : details;
+  const rest = dotIdx > -1 ? details.slice(dotIdx + 1).trim() : '';
+  return `
+    <div class="airline-box">
+      ${airlineName ? `<div class="airline-name">✈️ ${airlineName}</div>` : ''}
+      ${tf.flight_route ? `<div class="airline-route">${tf.flight_route}</div>` : ''}
+      ${rest ? `<div class="airline-detail">${rest}</div>` : ''}
     </div>
-  `).join('')}</div>`;
+  `;
+}
+
+function subtitleHtml(tf, hotels) {
+  const price = tf.price_quad || tf.price_triple || tf.price_double || tf.price_single;
+  const parts = [];
+  if (price) parts.push(`${t('price_from')} $${price}`);
+  hotels.forEach((h) => parts.push(`${h.city}: ${h.hotel_name}${h.nights ? ' (' + h.nights + ')' : ''}`));
+  return parts.length ? `<div class="pkg-subtitle">${parts.join(' · ')}</div>` : '';
 }
 
 function pricesHtml(tf) {
   const tiers = PRICE_TIERS.filter(([key]) => tf[key]);
   if (!tiers.length) return '';
-  return `<div class="tm-prices">${tiers.map(([key, n]) => `
-    <div class="tm-price-row"><span>${n} ${t('per_person')}</span><b>$${tf[key]}</b></div>
-  `).join('')}</div>`;
+  return `
+    <div class="tm-prices">${tiers.map(([key, n]) => `
+      <div class="tm-price-row"><span>${n} ${t('per_person')}</span><b>$${tf[key]}</b></div>
+    `).join('')}</div>
+    <div class="price-note">${t('price_note')}</div>
+  `;
 }
 
 function hotelsHtml(hotels) {
@@ -93,6 +141,47 @@ function hotelsHtml(hotels) {
       <div class="hotel-meta">${h.nights ? h.nights + ' · ' : ''}${field(h, 'meal_plan')}</div>
     </div>
   `).join('');
+}
+
+function extraServicesHtml(hotels) {
+  const rows = hotels.filter((h) => field(h, 'extra_badge_label'));
+  if (!rows.length) return '';
+  return `
+    <div class="section-subhead">${t('extra_services_label')}</div>
+    ${rows.map((h) => `
+      <div class="extra-service-row">
+        <span>${field(h, 'extra_badge_label')}</span>
+        ${h.extra_price ? `<b>$${h.extra_price}</b>` : ''}
+      </div>
+    `).join('')}
+  `;
+}
+
+function placesSectionHtml() {
+  return `
+    <div class="places-section">
+      <div class="section-subhead">${t('places_label')}</div>
+      <div class="places-city-label">${t('places_medina_label')}</div>
+      <ul class="tm-checklist">${MEDINA_PLACES.map((p) => `<li>${p}</li>`).join('')}</ul>
+      <div class="places-city-label">${t('places_makka_label')}</div>
+      <ul class="tm-checklist">${MAKKA_PLACES.map((p) => `<li>${p}</li>`).join('')}</ul>
+    </div>
+  `;
+}
+
+function incGridHtml(tf) {
+  const inclusionsRaw = (tf.inclusions_ru || '').split('|').map((s) => s.trim()).filter(Boolean);
+  if (!inclusionsRaw.length) return '';
+  const items = inclusionsRaw.map((raw) => {
+    const match = INC_ICON_MAP.find(([re]) => re.test(raw));
+    const icon = match ? match[1] : '✅';
+    const label = match ? t(match[2]) : raw;
+    return `<div class="inc-item"><div class="inc-ico">${icon}</div><div class="inc-label">${label}</div></div>`;
+  }).join('');
+  return `
+    <div class="section-subhead">${t('inclusions_label')}</div>
+    <div class="inc-grid">${items}</div>
+  `;
 }
 
 function activeTariffs() {
@@ -155,31 +244,37 @@ function renderTariffDetail(tariffId) {
     ...GENERIC_MEDIA,
   ];
   const desc = field(tf, 'short_desc');
-  const inclusions = field(tf, 'inclusions').split('|').map((s) => s.trim()).filter(Boolean);
   const dateOptions = datesForDepartureDay(tf.departure_day_ru);
+  const subtitle = subtitleHtml(tf, hotels);
   const bodyHtml = `
-    <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
+    ${subtitle}
     ${desc ? `<div class="pkg-desc">${desc}</div>` : ''}
-    ${galleryHtml(media)}
-    ${tf.flight_route ? `<div class="tm-info-row route"><b>${tf.flight_route}</b></div>` : ''}
-    ${field(tf, 'flight_details') ? `<div class="tm-info-row">${field(tf, 'flight_details')}</div>` : ''}
+  `;
+  const restHtml = `
+    <div class="pkg-badge">${duration}${departure ? ' · ' + departure : ''}</div>
+    ${photosGalleryHtml(media)}
+    ${videoButtonsHtml(media)}
+    ${airlineBoxHtml(tf)}
     ${hotelsHtml(hotels)}
-    ${field(tf, 'meal_plan') ? `<div class="tm-info-row">${field(tf, 'meal_plan')}</div>` : ''}
     ${pricesHtml(tf)}
-    ${inclusions.length ? `<ul class="tm-checklist">${inclusions.map((i) => `<li>${i}</li>`).join('')}</ul>` : ''}
+    <div class="transfer-banner">🚄 ${t('transfer_train_label')}</div>
+    ${extraServicesHtml(hotels)}
+    ${placesSectionHtml()}
+    ${incGridHtml(tf)}
   `;
 
   const cardsToRender = dateOptions.length ? dateOptions : [null];
   cardsEl.innerHTML = cardsToRender.map((dates) => `
     <div class="pkg-card ${theme}" data-tariff-id="${tf.id}">
       <div class="pkg-title-banner">${name}</div>
-      ${dates ? datePillHtml(dates) : ''}
       ${bodyHtml}
+      ${dates ? datePillHtml(dates) : ''}
+      ${restHtml}
       <div class="pkg-cta" data-role="request" data-date-range="${dates ? `${dates[0]} – ${dates[1]}` : ''}">${t('btn_book_dates')}</div>
     </div>
   `).join('');
 
-  cardsEl.querySelectorAll('.tm-gallery-item').forEach((node) => {
+  cardsEl.querySelectorAll('.tm-gallery-item, .watch-video-btn').forEach((node) => {
     node.addEventListener('click', () => {
       const items = media.map((m) => ({
         type: m.type,
