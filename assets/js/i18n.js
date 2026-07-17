@@ -30,7 +30,7 @@ const DICT = {
   inc_guide: { ru: 'Гид', uz: 'Гид', tj: 'Роҳбалад' },
   inc_insurance: { ru: 'Медстраховка', uz: 'Тиббий суғурта', tj: 'Суғуртаи тиббӣ' },
   inc_zamzam: { ru: '5л воды Замзам', uz: '5л Замзам суви', tj: '5л оби Замзам' },
-  meal_gallery_label: { ru: 'Питание в пути', uz: "Yo'lda ovqatlanish", tj: 'Хӯрокхӯрӣ дар роҳ' },
+  meal_gallery_label: { ru: 'Доп питание', uz: "Qo'shimcha ovqatlanish", tj: 'Хӯроки иловагӣ' },
   departure_dates_label: { ru: 'Даты выезда', uz: "Jo'nash sanalari", tj: 'Санаҳои рафтан' },
   choose_date_label: { ru: 'Выберите удобную дату', uz: 'Qulay sanani tanlang', tj: 'Санаи мувофиқро интихоб кунед' },
   season_jun_sep: { ru: 'Июнь — Сентябрь', uz: 'Iyun — Sentyabr', tj: 'Июн — Сентябр' },

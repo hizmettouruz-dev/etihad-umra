@@ -92,6 +92,50 @@ function priceFromText(price) {
   return `от $${price}`;
 }
 
+function localizedDuration(duration) {
+  const m = /(\d+)\s*kun\s*\/\s*(\d+)\s*kecha/i.exec(duration);
+  if (!m) return duration;
+  const [, days, nights] = m;
+  const lang = getLang();
+  if (lang === 'uz') return `${days} kun / ${nights} kecha`;
+  if (lang === 'tj') return `${days} рӯз / ${nights} шаб`;
+  return `${days} дней / ${nights} ночей`;
+}
+
+const CITY_NAMES = {
+  Madina: { ru: 'Медина', uz: 'Madina', tj: 'Мадина' },
+  Makka: { ru: 'Мекка', uz: 'Makka', tj: 'Макка' },
+  Jidda: { ru: 'Джидда', uz: 'Jidda', tj: 'Ҷидда' },
+};
+
+function localizedCity(city) {
+  const entry = CITY_NAMES[city];
+  if (!entry) return city;
+  const lang = getLang();
+  return entry[lang] || entry.ru;
+}
+
+function localizedNights(nights) {
+  const m = /(\d+)\s*kecha/i.exec(nights);
+  if (!m) return nights;
+  const n = m[1];
+  const lang = getLang();
+  if (lang === 'uz') return `${n} kecha`;
+  if (lang === 'tj') return `${n} шаб`;
+  return `${n} ночей`;
+}
+
+function localizedMeal(meal) {
+  const m = /(\d+)\s*mahal\s*(.*)$/i.exec(meal);
+  if (!m) return meal;
+  const [, n, rest] = m;
+  const isBuffet = /shved stoli|шведский стол/i.test(rest);
+  const lang = getLang();
+  if (lang === 'uz') return isBuffet ? `${n} mahal (shved stoli)` : `${n} mahal ovqatlanish`;
+  if (lang === 'tj') return isBuffet ? `${n} хӯрок (шведстол)` : `${n} хӯрок`;
+  return isBuffet ? `${n} питание (шведский стол)` : `${n} питание`;
+}
+
 function tariffMinPrice(tf) {
   let min = Infinity;
   if (tf.mode === 'multi') {
@@ -121,7 +165,7 @@ function tariffTileHtml(tf) {
       <div class="tname">${tf.name}</div>
       <div class="tsub">${t('pkg_label')}</div>
       ${price ? `<div class="tsub-price">${priceFromText(price)}</div>` : ''}
-      <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${h.nights})`).join(' · ')}</div>
+      <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${localizedNights(h.nights)})`).join(' · ')}</div>
       <div class="tgo">${t('btn_view')} →</div>
     </div>
   `;
@@ -137,7 +181,7 @@ function groupTileHtml(groupName) {
       <div class="tname">${groupName}</div>
       <div class="tsub">${t('pkg_label')}</div>
       ${Number.isFinite(price) ? `<div class="tsub-price">${priceFromText(price)}</div>` : ''}
-      <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${h.nights})`).join(' · ')}</div>
+      <div class="tsub-hotels">${hotels.map((h) => `${h.hotel_name} (${localizedNights(h.nights)})`).join(' · ')}</div>
       <div class="tgo">${t('btn_view')} →</div>
     </div>
   `;
@@ -224,7 +268,7 @@ function hotelGalleryHtml(media, hotelsList) {
     byName[m.label].items.push(m);
   });
   return groups.map((g) => `
-    <div class="hotel-gallery-caption">${g.label}${g.city ? ' · ' + g.city : ''}</div>
+    <div class="hotel-gallery-caption">${g.label}${g.city ? ' · ' + localizedCity(g.city) : ''}</div>
     <div class="tm-gallery">${g.items.map((m) => galleryItemHtml(m, media.indexOf(m))).join('')}</div>
   `).join('');
 }
@@ -263,9 +307,9 @@ function hotelsHtml(hotels) {
     <div class="hotel">
       <div class="ic">${iconHotel()}</div>
       <div class="h-body">
-        <div class="h-city">${h.city.toUpperCase()} <b>— ${h.nights.toUpperCase()}</b></div>
+        <div class="h-city">${localizedCity(h.city).toUpperCase()} <b>— ${localizedNights(h.nights).toUpperCase()}</b></div>
         <div class="h-name">${h.hotel_name}</div>
-        <div class="h-meal"><span class="ico">${iconMeal()}</span>${h.meal}</div>
+        <div class="h-meal"><span class="ico">${iconMeal()}</span>${localizedMeal(h.meal)}</div>
       </div>
     </div>
   `).join('');
@@ -338,7 +382,7 @@ function datePillHtml(start, end) {
 function multiSubtitle(tf) {
   const price = tariffMinPrice(tf);
   const hotels = tf.dates[0].hotels;
-  const hotelsLine = hotels.map((h) => `${h.city}: ${h.hotel_name} (${h.nights})`).join(' · ');
+  const hotelsLine = hotels.map((h) => `${localizedCity(h.city)}: ${h.hotel_name} (${localizedNights(h.nights)})`).join(' · ');
   return `
     ${price ? `<div class="pkg-subtitle-price">${priceFromText(price)}</div>` : ''}
     <div class="pkg-subtitle-hotels">${hotelsLine}</div>
@@ -375,7 +419,7 @@ function renderMultiDateDetail(tf, cardsEl) {
         <div class="pkg-title-banner">${tf.name}</div>
         ${subtitle}
         ${datePillHtml(entry.date_start, entry.date_end)}
-        <div class="days-badge">${entry.duration}</div>
+        <div class="days-badge">${localizedDuration(entry.duration)}</div>
         ${galleryHtml}
         ${videoLinkHtml(media)}
         ${airlineBoxHtml(entry.airline, entry.route)}
@@ -463,8 +507,8 @@ function renderSeasonalDetail(tf, cardsEl) {
       <div class="pkg-card ${tf.theme}" data-tariff-id="${tf.id}">
         <div class="pkg-title-banner">${tf.name}</div>
         <div class="pkg-subtitle-price">${priceFromText(minPrice)}</div>
-        <div class="pkg-subtitle-hotels">${season.hotels.map((h) => `${h.city}: ${h.hotel_name} (${h.nights})`).join(' · ')}</div>
-        <div class="days-badge">${season.duration.toUpperCase()}</div>
+        <div class="pkg-subtitle-hotels">${season.hotels.map((h) => `${localizedCity(h.city)}: ${h.hotel_name} (${localizedNights(h.nights)})`).join(' · ')}</div>
+        <div class="days-badge">${localizedDuration(season.duration)}</div>
         ${hotelGalleryHtml(media, season.hotels)}
         ${mealGalleryHtml(media)}
         ${videoLinkHtml(media)}
