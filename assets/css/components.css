@@ -85,6 +85,18 @@
   align-items: flex-end;
   gap: 12px;
 }
+.contact-toggle-label {
+  background: var(--card-bg);
+  color: var(--text-primary, #2b1d10);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(40,30,20,0.20);
+  animation: contactLabelPulse 2.2s ease-in-out infinite;
+}
 .contact-toggle-btn {
   width: 56px; height: 56px;
   border-radius: 999px;
@@ -94,8 +106,23 @@
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 8px 22px rgba(40,30,20,0.30);
   transition: transform 0.2s;
+  animation: contactBtnPulse 2.2s ease-in-out infinite;
 }
 .contact-toggle-btn:hover { transform: scale(1.06); }
+.contact-toggle-btn[aria-expanded="true"] { animation: none; }
+.contact-widget:has(.contact-toggle-btn[aria-expanded="true"]) .contact-toggle-label { animation: none; }
+
+@keyframes contactBtnPulse {
+  0%, 100% { box-shadow: 0 8px 22px rgba(40,30,20,0.30), 0 0 0 0 rgba(230,126,34,0.55); }
+  50% { box-shadow: 0 8px 22px rgba(40,30,20,0.30), 0 0 0 12px rgba(230,126,34,0); }
+}
+@keyframes contactLabelPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact-toggle-btn, .contact-toggle-label { animation: none; }
+}
 .contact-panel {
   display: none;
   flex-direction: column;

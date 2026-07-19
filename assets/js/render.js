@@ -1,17 +1,17 @@
-import { t, getLang } from './i18n.js?v=7';
-import { openMediaModal } from './mediaModal.js?v=7';
-import { openLeadForm } from './leadForm.js?v=7';
+import { t, getLang } from './i18n.js?v=8';
+import { openMediaModal } from './mediaModal.js?v=8';
+import { openLeadForm } from './leadForm.js?v=8';
 import {
   GH_PHOTO_BASE, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL,
   CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL,
-} from './config.js?v=7';
-import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js?v=7';
-import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=7';
-import { TARIFFS } from './tariffsData.js?v=7';
+} from './config.js?v=8';
+import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js?v=8';
+import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=8';
+import { TARIFFS } from './tariffsData.js?v=8';
 import {
   iconPlane, iconHotel, iconMeal, iconPeople, iconLuggage, iconTrain,
   iconTicket, iconTransfer, iconVisa, iconGuide, iconMedical, iconWater,
-} from './icons.js?v=7';
+} from './icons.js?v=8';
 
 const INC_ICON_MAP = [
   [/aviabilet/i, iconTicket],

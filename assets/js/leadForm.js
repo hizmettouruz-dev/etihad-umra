@@ -1,5 +1,5 @@
-import { t } from './i18n.js?v=7';
-import { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } from './config.js?v=7';
+import { t } from './i18n.js?v=8';
+import { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } from './config.js?v=8';
 
 function escapeHtml(str) {
   return String(str || '')
