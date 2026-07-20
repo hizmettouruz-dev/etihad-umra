@@ -1,9 +1,9 @@
-import { initI18n, applyStaticStrings } from './i18n.js?v=8';
-import { fetchSiteData } from './sheetsClient.js?v=8';
-import { setSiteData, renderTariffs, refreshTariffView, renderFaq, renderContacts, renderSkeletons, renderError, closeTariffDetail } from './render.js?v=8';
-import { initMediaModal } from './mediaModal.js?v=8';
-import { initLeadForm } from './leadForm.js?v=8';
-import { initContactWidget, renderContactWidget } from './contactWidget.js?v=8';
+import { initI18n, applyStaticStrings } from './i18n.js?v=9';
+import { fetchSiteData } from './sheetsClient.js?v=9';
+import { setSiteData, renderTariffs, refreshTariffView, renderFaq, renderContacts, renderSkeletons, renderError, closeTariffDetail } from './render.js?v=9';
+import { initMediaModal } from './mediaModal.js?v=9';
+import { initLeadForm } from './leadForm.js?v=9';
+import { initContactWidget, renderContactWidget } from './contactWidget.js?v=9';
 
 function initThemeToggle() {
   const KEY = 'theme';
