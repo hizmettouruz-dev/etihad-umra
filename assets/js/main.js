@@ -1,13 +1,13 @@
-import { initI18n, applyStaticStrings } from './i18n.js?v=10';
-import { fetchSiteData, fetchPriceSheetData } from './sheetsClient.js?v=10';
+import { initI18n, applyStaticStrings } from './i18n.js?v=11';
+import { fetchSiteData, fetchPriceSheetData } from './sheetsClient.js?v=11';
 import {
   setSiteData, renderTariffs, refreshTariffView, renderFaq, renderContacts,
   renderSkeletons, renderError, closeTariffDetail,
   applyCachedPriceOverrides, applyLivePriceOverrides,
-} from './render.js?v=10';
-import { initMediaModal } from './mediaModal.js?v=10';
-import { initLeadForm } from './leadForm.js?v=10';
-import { initContactWidget, renderContactWidget } from './contactWidget.js?v=10';
+} from './render.js?v=11';
+import { initMediaModal } from './mediaModal.js?v=11';
+import { initLeadForm } from './leadForm.js?v=11';
+import { initContactWidget, renderContactWidget } from './contactWidget.js?v=11';
 
 function initThemeToggle() {
   const KEY = 'theme';
@@ -64,6 +64,7 @@ function bootstrap() {
 
   applyCachedPriceOverrides(); // last known-good prices/dates, zero network wait
   renderTariffs(); // paints instantly — cached-or-static, never blank
+  renderContacts(); // paints instantly — config.js defaults until the sheet resolves
 
   document.addEventListener('langchange', () => {
     refreshTariffView();

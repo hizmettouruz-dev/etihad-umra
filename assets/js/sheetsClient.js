@@ -1,4 +1,4 @@
-import { SHEETS_API_KEY, SPREADSHEET_ID, CORE_SHEET_RANGES, PRICE_SHEET_RANGES } from './config.js?v=10';
+import { SHEETS_API_KEY, SPREADSHEET_ID, CORE_SHEET_RANGES, PRICE_SHEET_RANGES } from './config.js?v=11';
 
 function rowsToObjects(rows) {
   if (!rows || rows.length < 2) return [];

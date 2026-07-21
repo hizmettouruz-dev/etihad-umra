@@ -1,18 +1,18 @@
-import { t, getLang } from './i18n.js?v=10';
-import { openMediaModal } from './mediaModal.js?v=10';
-import { openLeadForm } from './leadForm.js?v=10';
+import { t, getLang } from './i18n.js?v=11';
+import { openMediaModal } from './mediaModal.js?v=11';
+import { openLeadForm } from './leadForm.js?v=11';
 import {
   GH_PHOTO_BASE, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL,
   CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL,
-} from './config.js?v=10';
-import { getThuDates, getSatDates } from './departureDates.js?v=10';
-import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=10';
-import { TARIFFS } from './tariffsData.js?v=10';
-import { applyOverrides, loadCache, saveCache } from './pricesStore.js?v=10';
+} from './config.js?v=11';
+import { getThuDates, getSatDates } from './departureDates.js?v=11';
+import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=11';
+import { TARIFFS } from './tariffsData.js?v=11';
+import { applyOverrides, loadCache, saveCache } from './pricesStore.js?v=11';
 import {
   iconPlane, iconHotel, iconMeal, iconPeople, iconLuggage, iconTrain,
   iconTicket, iconTransfer, iconVisa, iconGuide, iconMedical, iconWater,
-} from './icons.js?v=10';
+} from './icons.js?v=11';
 
 const INC_ICON_MAP = [
   [/aviabilet/i, iconTicket],
@@ -61,20 +61,22 @@ export function renderSkeletons() {
   }
 }
 
-function errorBlock(sectionId, onRetry) {
+function errorBlock(sectionId) {
   return `<div class="data-error">
     <div>${t('load_error')}</div>
     <button type="button" data-retry="${sectionId}">${t('retry')}</button>
   </div>`;
 }
 
+// Only FAQ shows an error+retry state on fetch failure. Contacts are never
+// blank/broken — resolveContacts() already falls back per-field to the
+// config.js defaults, so whatever was already rendered (defaults or a prior
+// successful fetch) just stays as-is.
 export function renderError(retryFn) {
-  ['faq-list', 'contacts-grid'].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = errorBlock(id);
-  });
+  const el = document.getElementById('faq-list');
+  if (el) el.innerHTML = errorBlock('faq-list');
   document.querySelectorAll('[data-retry]').forEach((btn) => {
-    btn.addEventListener('click', onRetry, { once: true });
+    btn.addEventListener('click', retryFn, { once: true });
   });
 }
 
@@ -627,18 +629,39 @@ export function renderFaq() {
   });
 }
 
-// Real business contacts, same source as the floating contact widget —
-// deliberately not sheet-driven, see config.js.
+// Real business contacts. Sheet-driven (Contacts tab, key/value rows) with
+// per-field fallback to the config.js constants — a missing/blank key (or a
+// failed fetch entirely) just keeps that one field at its hardcoded default,
+// same reliability pattern as tariff prices: never blank, never an error
+// state, no visible flicker (fields only change if the sheet's value
+// actually differs from the default already on screen).
+export function resolveContacts(rows) {
+  const map = {};
+  (rows || []).forEach((r) => { if (r.key) map[r.key.trim()] = (r.value || '').trim(); });
+
+  const phones = [map.phone_1, map.phone_2, map.phone_3].filter(Boolean);
+
+  return {
+    phones: phones.length ? phones : CONTACT_PHONES,
+    address: map.address || CONTACT_ADDRESS,
+    mapsUrl: map.maps_url || CONTACT_MAPS_URL,
+    instagramUrl: map.instagram_url || CONTACT_INSTAGRAM_URL,
+    telegramUrl: map.telegram_url || CONTACT_TELEGRAM_URL,
+    whatsappUrl: map.whatsapp_url || CONTACT_WHATSAPP_URL,
+  };
+}
+
 export function renderContacts() {
   const grid = document.getElementById('contacts-grid');
   if (!grid) return;
 
+  const c = resolveContacts(siteData && siteData.contacts);
   const rows = [
-    { label: t('contact_phone'), icon: '📞', value: CONTACT_PHONES.join(' · '), href: `tel:${CONTACT_PHONES[0].replace(/[^\d+]/g, '')}` },
-    { label: t('contact_address'), icon: '📍', value: CONTACT_ADDRESS, href: CONTACT_MAPS_URL },
-    { label: t('contact_instagram'), icon: '📷', value: 'Instagram', href: CONTACT_INSTAGRAM_URL },
-    { label: t('contact_telegram'), icon: '✈️', value: 'Telegram', href: CONTACT_TELEGRAM_URL },
-    { label: t('contact_whatsapp'), icon: '💬', value: 'WhatsApp', href: CONTACT_WHATSAPP_URL },
+    { label: t('contact_phone'), icon: '📞', value: c.phones.join(' · '), href: `tel:${c.phones[0].replace(/[^\d+]/g, '')}` },
+    { label: t('contact_address'), icon: '📍', value: c.address, href: c.mapsUrl },
+    { label: t('contact_instagram'), icon: '📷', value: 'Instagram', href: c.instagramUrl },
+    { label: t('contact_telegram'), icon: '✈️', value: 'Telegram', href: c.telegramUrl },
+    { label: t('contact_whatsapp'), icon: '💬', value: 'WhatsApp', href: c.whatsappUrl },
   ];
 
   grid.innerHTML = rows.map((r) => `

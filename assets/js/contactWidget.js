@@ -1,6 +1,6 @@
-import { CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL } from './config.js?v=10';
-import { openLeadForm } from './leadForm.js?v=10';
-import { t } from './i18n.js?v=10';
+import { openLeadForm } from './leadForm.js?v=11';
+import { t } from './i18n.js?v=11';
+import { getSiteData, resolveContacts } from './render.js?v=11';
 
 function el(id) { return document.getElementById(id); }
 
@@ -12,23 +12,26 @@ export function renderContactWidget() {
   const panel = el('contactPanel');
   if (!panel) return;
 
+  const siteData = getSiteData();
+  const c = resolveContacts(siteData && siteData.contacts);
+
   panel.innerHTML = `
-    <a class="contact-link" href="${CONTACT_INSTAGRAM_URL}" target="_blank" rel="noopener">
+    <a class="contact-link" href="${c.instagramUrl}" target="_blank" rel="noopener">
       <span class="ico">📷</span> ${t('contact_instagram')}
     </a>
-    <a class="contact-link" href="${CONTACT_TELEGRAM_URL}" target="_blank" rel="noopener">
+    <a class="contact-link" href="${c.telegramUrl}" target="_blank" rel="noopener">
       <span class="ico">✈️</span> ${t('contact_telegram')}
     </a>
-    <a class="contact-link" href="${CONTACT_WHATSAPP_URL}" target="_blank" rel="noopener">
+    <a class="contact-link" href="${c.whatsappUrl}" target="_blank" rel="noopener">
       <span class="ico">💬</span> ${t('contact_whatsapp')}
     </a>
-    ${CONTACT_PHONES.map((p) => `
+    ${c.phones.map((p) => `
       <a class="contact-link" href="${telHref(p)}">
         <span class="ico">📞</span> ${p}
       </a>
     `).join('')}
-    <a class="contact-link" href="${CONTACT_MAPS_URL}" target="_blank" rel="noopener">
-      <span class="ico">📍</span> ${CONTACT_ADDRESS}
+    <a class="contact-link" href="${c.mapsUrl}" target="_blank" rel="noopener">
+      <span class="ico">📍</span> ${c.address}
     </a>
     <button type="button" class="contact-lead-btn" id="contactLeadBtn">${t('btn_request')}</button>
   `;

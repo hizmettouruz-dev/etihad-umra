@@ -1,5 +1,5 @@
-import { PRICE_CACHE_KEY } from './config.js?v=10';
-import { setDepartureDates } from './departureDates.js?v=10';
+import { PRICE_CACHE_KEY } from './config.js?v=11';
+import { setDepartureDates } from './departureDates.js?v=11';
 
 // Groups a multi-mode tariff's existing static date entries by their
 // non-price/date fields (hotels/route/duration/etc.) into "variant"
