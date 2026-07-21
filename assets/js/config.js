@@ -21,9 +21,14 @@ export const TELEGRAM_CHAT_ID = '1739109071';
 
 // Tariffs/hotels/media mostly live in tariffsData.js (real per-package data) —
 // only FAQ, Contacts, and now prices/departure dates are sheet-driven.
-export const SHEET_RANGES = [
+// Split into two independent batchGet requests (see sheetsClient.js) so a
+// problem with the newer price/date tabs (e.g. not created yet) can never
+// take down the long-standing FAQ/Contacts tabs too.
+export const CORE_SHEET_RANGES = [
   'FAQ!A1:Z100',
   'Contacts!A1:E50',
+];
+export const PRICE_SHEET_RANGES = [
   'MultiDates!A1:H200',
   'SeasonalPrices!A1:F100',
   'DepartureDates!A1:C100',

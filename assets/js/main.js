@@ -1,5 +1,5 @@
 import { initI18n, applyStaticStrings } from './i18n.js?v=10';
-import { fetchSiteData } from './sheetsClient.js?v=10';
+import { fetchSiteData, fetchPriceSheetData } from './sheetsClient.js?v=10';
 import {
   setSiteData, renderTariffs, refreshTariffView, renderFaq, renderContacts,
   renderSkeletons, renderError, closeTariffDetail,
@@ -28,16 +28,26 @@ async function loadData() {
     setSiteData(data);
     renderFaq();
     renderContacts();
+  } catch (err) {
+    console.error('Sheets fetch failed:', err);
+    renderError(loadData);
+  }
+}
+
+async function loadPriceData() {
+  try {
     // Reconcile prices/dates in the background. Usually a silent no-op
     // visually (the cache already matched); if the sheet changed since the
     // last successful fetch, this quietly updates whatever tariff screen is
     // open — no error state, no flash, since something correct was already
-    // on screen from applyCachedPriceOverrides() below.
+    // on screen from applyCachedPriceOverrides() below. Deliberately a
+    // separate request/try-catch from FAQ/Contacts above, so a missing or
+    // malformed price/date tab can never break those.
+    const data = await fetchPriceSheetData();
     applyLivePriceOverrides(data);
     refreshTariffView();
   } catch (err) {
-    console.error('Sheets fetch failed:', err);
-    renderError(loadData);
+    console.error('Price sheet fetch failed:', err);
     // Tariffs are intentionally left untouched on failure — whatever was
     // already painted (cache or static baseline) stays exactly as-is.
   }
@@ -64,6 +74,7 @@ function bootstrap() {
   });
 
   loadData();
+  loadPriceData();
 }
 
 document.addEventListener('DOMContentLoaded', bootstrap);
