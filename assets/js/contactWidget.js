@@ -1,6 +1,6 @@
-import { CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL } from './config.js?v=9';
-import { openLeadForm } from './leadForm.js?v=9';
-import { t } from './i18n.js?v=9';
+import { CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL } from './config.js?v=10';
+import { openLeadForm } from './leadForm.js?v=10';
+import { t } from './i18n.js?v=10';
 
 function el(id) { return document.getElementById(id); }
 

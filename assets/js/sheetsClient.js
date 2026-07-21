@@ -1,4 +1,4 @@
-import { SHEETS_API_KEY, SPREADSHEET_ID, SHEET_RANGES } from './config.js?v=9';
+import { SHEETS_API_KEY, SPREADSHEET_ID, SHEET_RANGES } from './config.js?v=10';
 
 function rowsToObjects(rows) {
   if (!rows || rows.length < 2) return [];
@@ -16,8 +16,9 @@ function rowsToObjects(rows) {
 }
 
 // Fetches every configured tab in a single HTTP round-trip and returns
-// { faq, contacts } — never cached, always fresh. (Tariffs/hotels/media are
-// static now, see tariffsData.js — only FAQ/Contacts still live in Sheets.)
+// { faq, contacts, multiDates, seasonalPrices, departureDates } — never
+// cached, always fresh. Photos/hotels/inclusions/etc. stay static in
+// tariffsData.js — only FAQ/Contacts/prices/dates live in Sheets.
 export async function fetchSiteData() {
   const params = new URLSearchParams();
   SHEET_RANGES.forEach((r) => params.append('ranges', r));
@@ -32,10 +33,13 @@ export async function fetchSiteData() {
     throw new Error(`Sheets API ${res.status}: ${body.slice(0, 200)}`);
   }
   const json = await res.json();
-  const [faqRange, contactsRange] = json.valueRanges || [];
+  const [faqRange, contactsRange, multiDatesRange, seasonalPricesRange, departureDatesRange] = json.valueRanges || [];
 
   return {
     faq: rowsToObjects(faqRange && faqRange.values),
     contacts: rowsToObjects(contactsRange && contactsRange.values),
+    multiDates: rowsToObjects(multiDatesRange && multiDatesRange.values),
+    seasonalPrices: rowsToObjects(seasonalPricesRange && seasonalPricesRange.values),
+    departureDates: rowsToObjects(departureDatesRange && departureDatesRange.values),
   };
 }

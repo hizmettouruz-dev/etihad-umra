@@ -19,12 +19,20 @@ export const GH_HERO_BASE = 'https://github.com/hizmettouruz-dev/etihad-umra/rel
 export const TELEGRAM_BOT_TOKEN = '8916790909:AAFIgc6Ng_8T-oNB11ZOg0fm5G-4iZNEIt0';
 export const TELEGRAM_CHAT_ID = '1739109071';
 
-// Tariffs/hotels/media now live in tariffsData.js (real per-package data) —
-// only FAQ and Contacts are still sheet-driven.
+// Tariffs/hotels/media mostly live in tariffsData.js (real per-package data) —
+// only FAQ, Contacts, and now prices/departure dates are sheet-driven.
 export const SHEET_RANGES = [
   'FAQ!A1:Z100',
   'Contacts!A1:E50',
+  'MultiDates!A1:H200',
+  'SeasonalPrices!A1:F100',
+  'DepartureDates!A1:C100',
 ];
+
+// localStorage key for the last successfully fetched price/date overrides —
+// used so the very next page load can paint real numbers instantly, before
+// the network round-trip to Sheets even starts. See pricesStore.js.
+export const PRICE_CACHE_KEY = 'etihad_price_overrides_v1';
 
 // Real business contacts for the floating contact widget (deliberately not
 // sheet-driven — this is fixed brand info, not something the client edits

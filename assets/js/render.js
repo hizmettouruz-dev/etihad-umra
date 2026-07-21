@@ -1,17 +1,18 @@
-import { t, getLang } from './i18n.js?v=9';
-import { openMediaModal } from './mediaModal.js?v=9';
-import { openLeadForm } from './leadForm.js?v=9';
+import { t, getLang } from './i18n.js?v=10';
+import { openMediaModal } from './mediaModal.js?v=10';
+import { openLeadForm } from './leadForm.js?v=10';
 import {
   GH_PHOTO_BASE, CONTACT_PHONES, CONTACT_ADDRESS, CONTACT_MAPS_URL,
   CONTACT_INSTAGRAM_URL, CONTACT_TELEGRAM_URL, CONTACT_WHATSAPP_URL,
-} from './config.js?v=9';
-import { THU_DATES_2026, SAT_DATES_2026 } from './departureDates.js?v=9';
-import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=9';
-import { TARIFFS } from './tariffsData.js?v=9';
+} from './config.js?v=10';
+import { getThuDates, getSatDates } from './departureDates.js?v=10';
+import { MEDINA_PLACES, MAKKA_PLACES } from './ziyaratPlaces.js?v=10';
+import { TARIFFS } from './tariffsData.js?v=10';
+import { applyOverrides, loadCache, saveCache } from './pricesStore.js?v=10';
 import {
   iconPlane, iconHotel, iconMeal, iconPeople, iconLuggage, iconTrain,
   iconTicket, iconTransfer, iconVisa, iconGuide, iconMedical, iconWater,
-} from './icons.js?v=9';
+} from './icons.js?v=10';
 
 const INC_ICON_MAP = [
   [/aviabilet/i, iconTicket],
@@ -489,7 +490,7 @@ function datePickerHtml(dateList, selIdx, activeSeason) {
 }
 
 function renderSeasonalDetail(tf, cardsEl) {
-  const dateList = tf.seasonal.jun_sep.weekday === 'Payshanba' ? THU_DATES_2026 : SAT_DATES_2026;
+  const dateList = tf.seasonal.jun_sep.weekday === 'Payshanba' ? getThuDates() : getSatDates();
   const selIdx = seasonalSelection[tf.id] ?? 0;
   const selDate = dateList[selIdx];
   const derivedSeason = Number(selDate[0].split('.')[1]) >= 10 ? 'oct_dec' : 'jun_sep';
@@ -581,6 +582,25 @@ export function refreshTariffView() {
   } else if (navState.type === 'detail') {
     openTariffDetail(navState.tariffId, navState.fromGroup, true);
   }
+}
+
+// Instant, no-network paint of the last successfully fetched prices/dates
+// (if any) — called before the first renderTariffs() so a returning visitor
+// never sees the (possibly stale) baked-in defaults flash before the real
+// numbers arrive. No-op if nothing was ever cached (first-ever visit).
+export function applyCachedPriceOverrides() {
+  const cached = loadCache();
+  if (cached) applyOverrides(TARIFFS, cached);
+}
+
+// Applies a fresh Sheets fetch's prices/dates onto the live TARIFFS data and
+// persists it as the new cache. Caller is responsible for re-rendering
+// (refreshTariffView) afterwards. Never throws on malformed rows — mismatched
+// tariff_ids/seasons are just skipped, leaving those entries at their prior
+// values.
+export function applyLivePriceOverrides(sheetData) {
+  applyOverrides(TARIFFS, sheetData);
+  saveCache(sheetData);
 }
 
 // ================= FAQ / Contacts (still sheet-driven) =================

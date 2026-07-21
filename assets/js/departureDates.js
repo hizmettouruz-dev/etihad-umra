@@ -38,3 +38,23 @@ export function datesForDepartureDay(departureDayRu) {
   if (departureDayRu === 'Суббота') return SAT_DATES_2026;
   return [];
 }
+
+// Sheet-overridable departure calendar. Starts out as the static defaults
+// above; setDepartureDates() swaps in sheet-sourced dates once fetched
+// (see pricesStore.js). Falls back to the static defaults if never called
+// or given empty/malformed data — the calendar is never empty.
+let currentThuDates = THU_DATES_2026;
+let currentSatDates = SAT_DATES_2026;
+
+export function getThuDates() {
+  return currentThuDates;
+}
+
+export function getSatDates() {
+  return currentSatDates;
+}
+
+export function setDepartureDates({ thu, sat } = {}) {
+  currentThuDates = (thu && thu.length) ? thu : THU_DATES_2026;
+  currentSatDates = (sat && sat.length) ? sat : SAT_DATES_2026;
+}

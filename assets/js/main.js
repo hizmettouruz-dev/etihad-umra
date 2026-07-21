@@ -1,9 +1,13 @@
-import { initI18n, applyStaticStrings } from './i18n.js?v=9';
-import { fetchSiteData } from './sheetsClient.js?v=9';
-import { setSiteData, renderTariffs, refreshTariffView, renderFaq, renderContacts, renderSkeletons, renderError, closeTariffDetail } from './render.js?v=9';
-import { initMediaModal } from './mediaModal.js?v=9';
-import { initLeadForm } from './leadForm.js?v=9';
-import { initContactWidget, renderContactWidget } from './contactWidget.js?v=9';
+import { initI18n, applyStaticStrings } from './i18n.js?v=10';
+import { fetchSiteData } from './sheetsClient.js?v=10';
+import {
+  setSiteData, renderTariffs, refreshTariffView, renderFaq, renderContacts,
+  renderSkeletons, renderError, closeTariffDetail,
+  applyCachedPriceOverrides, applyLivePriceOverrides,
+} from './render.js?v=10';
+import { initMediaModal } from './mediaModal.js?v=10';
+import { initLeadForm } from './leadForm.js?v=10';
+import { initContactWidget, renderContactWidget } from './contactWidget.js?v=10';
 
 function initThemeToggle() {
   const KEY = 'theme';
@@ -24,9 +28,18 @@ async function loadData() {
     setSiteData(data);
     renderFaq();
     renderContacts();
+    // Reconcile prices/dates in the background. Usually a silent no-op
+    // visually (the cache already matched); if the sheet changed since the
+    // last successful fetch, this quietly updates whatever tariff screen is
+    // open — no error state, no flash, since something correct was already
+    // on screen from applyCachedPriceOverrides() below.
+    applyLivePriceOverrides(data);
+    refreshTariffView();
   } catch (err) {
     console.error('Sheets fetch failed:', err);
     renderError(loadData);
+    // Tariffs are intentionally left untouched on failure — whatever was
+    // already painted (cache or static baseline) stays exactly as-is.
   }
 }
 
@@ -39,7 +52,8 @@ function bootstrap() {
 
   document.getElementById('tariffBackBtn').addEventListener('click', closeTariffDetail);
 
-  renderTariffs(); // static data — renders instantly, no network wait
+  applyCachedPriceOverrides(); // last known-good prices/dates, zero network wait
+  renderTariffs(); // paints instantly — cached-or-static, never blank
 
   document.addEventListener('langchange', () => {
     refreshTariffView();
